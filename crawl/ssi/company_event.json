@@ -1,0 +1,1754 @@
+{
+    "code": "SUCCESS",
+    "message": "Get time scale marks success",
+    "data": [
+        {
+            "id": "2568828",
+            "time": 1718125200,
+            "tooltip": [
+                "FPT - Trả cổ tức Đợt 2 năm 2023 bằng tiền 1000 đồng/cổ phiếu",
+                "Ngày GDKHQ: 12/06/2024",
+                "Ngày thực hiện: 20/06/2024",
+                "Ngày chốt: 13/06/2024"
+            ],
+            "shape": "circle",
+            "color": "blue",
+            "label": "D"
+        },
+        {
+            "id": "2565369",
+            "time": 1709485200,
+            "tooltip": [
+                "FPT - Tổ chức ĐHĐCĐ thường niên 2024",
+                "Ngày GDKHQ: 04/03/2024",
+                "Ngày thực hiện: 10/04/2024",
+                "Ngày chốt: 05/03/2024"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "M"
+        },
+        {
+            "id": "2563845",
+            "time": 1692810000,
+            "tooltip": [
+                "FPT - Trả cổ tức Đợt 1 năm 2023 bằng tiền 1000 đồng/cổ phiếu",
+                "Ngày GDKHQ: 24/08/2023",
+                "Ngày thực hiện: 12/09/2023",
+                "Ngày chốt: 25/08/2023"
+            ],
+            "shape": "circle",
+            "color": "blue",
+            "label": "D"
+        },
+        {
+            "id": "2563774",
+            "time": 1691341200,
+            "tooltip": [
+                "FPT - Niêm yết bổ sung 165,637,253 cổ phiếu",
+                "Ngày thực hiện: 07/08/2023"
+            ],
+            "shape": "circle",
+            "color": "blue",
+            "label": "A"
+        },
+        {
+            "id": "2563331",
+            "time": 1688490000,
+            "tooltip": [
+                "FPT - Trả cổ tức Đợt 2 năm 2022 bằng tiền 1000 đồng/cổ phiếu",
+                "Ngày GDKHQ: 05/07/2023",
+                "Ngày thực hiện: 13/07/2023",
+                "Ngày chốt: 06/07/2023"
+            ],
+            "shape": "circle",
+            "color": "blue",
+            "label": "D"
+        },
+        {
+            "id": "2563097",
+            "time": 1685466000,
+            "tooltip": [
+                "FPT - Niêm yết bổ sung 7,305,050 cổ phiếu",
+                "Ngày thực hiện: 31/05/2023"
+            ],
+            "shape": "circle",
+            "color": "blue",
+            "label": "A"
+        },
+        {
+            "id": "2560864",
+            "time": 1677776400,
+            "tooltip": [
+                "FPT - Tổ chức ĐHĐCĐ thường niên 2023",
+                "Ngày GDKHQ: 03/03/2023",
+                "Ngày thực hiện: 06/04/2023",
+                "Ngày chốt: 06/03/2023"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "M"
+        },
+        {
+            "id": "2559549",
+            "time": 1661274000,
+            "tooltip": [
+                "FPT - Trả cổ tức Đợt 1 năm 2022 bằng tiền 1000 đồng/cổ phiếu",
+                "Ngày GDKHQ: 24/08/2022",
+                "Ngày thực hiện: 12/09/2022",
+                "Ngày chốt: 25/08/2022"
+            ],
+            "shape": "circle",
+            "color": "blue",
+            "label": "D"
+        },
+        {
+            "id": "2559126",
+            "time": 1658163600,
+            "tooltip": [
+                "FPT - Niêm yết bổ sung 182,830,658 cổ phiếu",
+                "Ngày thực hiện: 19/07/2022"
+            ],
+            "shape": "circle",
+            "color": "blue",
+            "label": "A"
+        },
+        {
+            "id": "2558729",
+            "time": 1655053200,
+            "tooltip": [
+                "FPT - Trả cổ tức Đợt 2 năm 2021 bằng tiền 1000 đồng/cổ phiếu",
+                "Ngày GDKHQ: 13/06/2022",
+                "Ngày thực hiện: 27/06/2022",
+                "Ngày chốt: 14/06/2022"
+            ],
+            "shape": "circle",
+            "color": "blue",
+            "label": "D"
+        },
+        {
+            "id": "2558692",
+            "time": 1653843600,
+            "tooltip": [
+                "FPT - Niêm yết bổ sung 2,107,000 cổ phiếu",
+                "Ngày thực hiện: 30/05/2022"
+            ],
+            "shape": "circle",
+            "color": "blue",
+            "label": "A"
+        },
+        {
+            "id": "2558691",
+            "time": 1653843600,
+            "tooltip": [
+                "FPT - Niêm yết bổ sung 4,537,265 cổ phiếu",
+                "Ngày thực hiện: 30/05/2022"
+            ],
+            "shape": "circle",
+            "color": "blue",
+            "label": "A"
+        },
+        {
+            "id": "1349535",
+            "time": 1648746000,
+            "tooltip": [
+                "FPT- Niêm yết thêm 506.055 cổ phiếu",
+                "Ngày thực hiện: 01/04/2022"
+            ],
+            "shape": "circle",
+            "color": "blue",
+            "label": "A"
+        },
+        {
+            "id": "1164891",
+            "time": 1648746000,
+            "tooltip": [
+                "FPT - Niêm yết bổ sung 306.697  cổ phiếu hạn chế chuyển nhượng từ 01/04/2019 đến 31/03/2022",
+                "Ngày thực hiện: 01/04/2022"
+            ],
+            "shape": "circle",
+            "color": "blue",
+            "label": "A"
+        },
+        {
+            "id": "2456430",
+            "time": 1646154000,
+            "tooltip": [
+                "FPT - Tổ chức ĐHĐCĐ thường niên 2022",
+                "Ngày GDKHQ: 02/03/2022",
+                "Ngày thực hiện: 07/04/2022",
+                "Ngày chốt: 03/03/2022"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "M"
+        },
+        {
+            "id": "2436215",
+            "time": 1642352400,
+            "tooltip": [
+                "FPT - Đã bán 82.376 cổ phiếu quỹ",
+                "Ngày thực hiện: 17/01/2022"
+            ],
+            "shape": "circle",
+            "color": "blue",
+            "label": "T"
+        },
+        {
+            "id": "2044678",
+            "time": 1629046800,
+            "tooltip": [
+                "FPT - Trả cổ tức Đợt 1, 2021 bằng tiền 1000 VND/CP",
+                "Ngày GDKHQ: 16/08/2021",
+                "Ngày thực hiện: 01/09/2021",
+                "Ngày chốt: 17/08/2021"
+            ],
+            "shape": "circle",
+            "color": "blue",
+            "label": "D"
+        },
+        {
+            "id": "1984465",
+            "time": 1626800400,
+            "tooltip": [
+                "FPT - Niêm yết bổ sung 118.354.395 cổ phiếu",
+                "Ngày thực hiện: 21/07/2021"
+            ],
+            "shape": "circle",
+            "color": "blue",
+            "label": "A"
+        },
+        {
+            "id": "1853881",
+            "time": 1622480400,
+            "tooltip": [
+                "FPT - Trả cổ tức Đợt 2, 2020 bằng tiền 1000 VND/CP",
+                "Ngày GDKHQ: 01/06/2021",
+                "Ngày thực hiện: 16/06/2021",
+                "Ngày chốt: 02/06/2021"
+            ],
+            "shape": "circle",
+            "color": "blue",
+            "label": "D"
+        },
+        {
+            "id": "1823797",
+            "time": 1621270800,
+            "tooltip": [
+                "FPT - Niêm yết bổ sung 1.290.300 cổ phiếu",
+                "Ngày thực hiện: 18/05/2021"
+            ],
+            "shape": "circle",
+            "color": "blue",
+            "label": "A"
+        },
+        {
+            "id": "1823796",
+            "time": 1621270800,
+            "tooltip": [
+                "FPT - Niêm yết bổ sung 3.919.468 cổ phiếu",
+                "Ngày thực hiện: 18/05/2021"
+            ],
+            "shape": "circle",
+            "color": "blue",
+            "label": "A"
+        },
+        {
+            "id": "1349534",
+            "time": 1617555600,
+            "tooltip": [
+                "FPT- Niêm yết thêm 503.681 cổ phiếu",
+                "Ngày thực hiện: 05/04/2021"
+            ],
+            "shape": "circle",
+            "color": "blue",
+            "label": "A"
+        },
+        {
+            "id": "970832",
+            "time": 1617555600,
+            "tooltip": [
+                "FPT - Niêm yết thêm 80.021.111 cổ phiếu",
+                "Ngày thực hiện: 05/04/2021"
+            ],
+            "shape": "circle",
+            "color": "blue",
+            "label": "A"
+        },
+        {
+            "id": "959876",
+            "time": 1617555600,
+            "tooltip": [
+                "FPT - Niêm yết thêm 2,654,556 cổ phiếu",
+                "Ngày thực hiện: 05/04/2021"
+            ],
+            "shape": "circle",
+            "color": "blue",
+            "label": "A"
+        },
+        {
+            "id": "1164890",
+            "time": 1617555600,
+            "tooltip": [
+                "FPT - Niêm yết bổ sung 305.225  cổ phiếu hạn chế chuyển nhượng từ ngày 03/04/2018 đến ngày 02/04/2021",
+                "Ngày thực hiện: 05/04/2021"
+            ],
+            "shape": "circle",
+            "color": "blue",
+            "label": "A"
+        },
+        {
+            "id": "1611841",
+            "time": 1614704400,
+            "tooltip": [
+                "FPT - Tổ chức ĐHĐCĐ thường niên 2021",
+                "Ngày GDKHQ: 03/03/2021",
+                "Ngày thực hiện: 08/04/2021",
+                "Ngày chốt: 04/03/2021"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "M"
+        },
+        {
+            "id": "1380029",
+            "time": 1597597200,
+            "tooltip": [
+                "FPT - Trả cổ tức Đợt 1, 2020 bằng tiền 1000 VND/CP",
+                "Ngày GDKHQ: 17/08/2020",
+                "Ngày thực hiện: 01/09/2020",
+                "Ngày chốt: 18/08/2020"
+            ],
+            "shape": "circle",
+            "color": "blue",
+            "label": "D"
+        },
+        {
+            "id": "1349533",
+            "time": 1593450000,
+            "tooltip": [
+                "FPT- Niêm yết thêm 100.718.556 cổ phiếu",
+                "Ngày thực hiện: 30/06/2020"
+            ],
+            "shape": "circle",
+            "color": "blue",
+            "label": "A"
+        },
+        {
+            "id": "1349536",
+            "time": 1592758800,
+            "tooltip": [
+                "FPT- Niêm yết thêm 508.706 cổ phiếu",
+                "Ngày thực hiện: 22/06/2020"
+            ],
+            "shape": "circle",
+            "color": "blue",
+            "label": "A"
+        },
+        {
+            "id": "1338717",
+            "time": 1589302800,
+            "tooltip": [
+                "FPT - Trả cổ tức Đợt 2, 2019 bằng tiền 1000 VND/CP",
+                "Ngày GDKHQ: 13/05/2020",
+                "Ngày thực hiện: 05/06/2020",
+                "Ngày chốt: 14/05/2020"
+            ],
+            "shape": "circle",
+            "color": "blue",
+            "label": "D"
+        },
+        {
+            "id": "1338679",
+            "time": 1587920400,
+            "tooltip": [
+                "FPT - Niêm yết bổ sung 3.391.790 cổ phiếu",
+                "Ngày thực hiện: 27/04/2020"
+            ],
+            "shape": "circle",
+            "color": "blue",
+            "label": "A"
+        },
+        {
+            "id": "86939",
+            "time": 1586106000,
+            "tooltip": [
+                "FPT-Niêm yết bổ sung 2.296.370 cổ phiếu",
+                "Ngày thực hiện: 06/04/2020"
+            ],
+            "shape": "circle",
+            "color": "blue",
+            "label": "A"
+        },
+        {
+            "id": "970831",
+            "time": 1586106000,
+            "tooltip": [
+                "FPT - Niêm yết thêm 80.021.111 cổ phiếu",
+                "Ngày thực hiện: 06/04/2020"
+            ],
+            "shape": "circle",
+            "color": "blue",
+            "label": "A"
+        },
+        {
+            "id": "1316972",
+            "time": 1583168400,
+            "tooltip": [
+                "FPT - Tổ chức ĐHĐCĐ thường niên 2020",
+                "Ngày GDKHQ: 03/03/2020",
+                "Ngày thực hiện: 08/04/2020",
+                "Ngày chốt: 04/03/2020"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "M"
+        },
+        {
+            "id": "1185273",
+            "time": 1565802000,
+            "tooltip": [
+                "FPT - Trả cổ tức Đợt 1, 2019 bằng tiền 1000 VND/CP",
+                "Ngày GDKHQ: 15/08/2019",
+                "Ngày thực hiện: 30/08/2019",
+                "Ngày chốt: 16/08/2019"
+            ],
+            "shape": "circle",
+            "color": "blue",
+            "label": "D"
+        },
+        {
+            "id": "1164888",
+            "time": 1561654800,
+            "tooltip": [
+                "FPT - Niêm yết bổ sung 60.739.121  cổ phiếu tự do chuyển nhượng",
+                "Ngày thực hiện: 28/06/2019"
+            ],
+            "shape": "circle",
+            "color": "blue",
+            "label": "A"
+        },
+        {
+            "id": "1094315",
+            "time": 1558026000,
+            "tooltip": [
+                "FPT - Trả cổ tức Đợt 2, 2018 bằng tiền 1000 VND/CP",
+                "Ngày GDKHQ: 17/05/2019",
+                "Ngày thực hiện: 07/06/2019",
+                "Ngày chốt: 20/05/2019"
+            ],
+            "shape": "circle",
+            "color": "blue",
+            "label": "D"
+        },
+        {
+            "id": "1164889",
+            "time": 1554483600,
+            "tooltip": [
+                "FPT - Niêm yết bổ sung 303.673  cổ phiếu hạn chế chuyển nhượng từ ngày 04/04/2017 đến ngày 03/04/2020",
+                "Ngày thực hiện: 06/04/2019"
+            ],
+            "shape": "circle",
+            "color": "blue",
+            "label": "A"
+        },
+        {
+            "id": "51274",
+            "time": 1554397200,
+            "tooltip": [
+                "FPT-Niêm yết thêm 1.986.829 cổ phiếu",
+                "Ngày thực hiện: 05/04/2019"
+            ],
+            "shape": "circle",
+            "color": "blue",
+            "label": "A"
+        },
+        {
+            "id": "970830",
+            "time": 1554397200,
+            "tooltip": [
+                "FPT - Niêm yết thêm 80.021.111 cổ phiếu",
+                "Ngày thực hiện: 05/04/2019"
+            ],
+            "shape": "circle",
+            "color": "blue",
+            "label": "A"
+        },
+        {
+            "id": "53476",
+            "time": 1554397200,
+            "tooltip": [
+                "FPT-Niêm yết bổ sung 297.972 cổ phiếu",
+                "Ngày thực hiện: 05/04/2019"
+            ],
+            "shape": "circle",
+            "color": "blue",
+            "label": "A"
+        },
+        {
+            "id": "1062464",
+            "time": 1551286800,
+            "tooltip": [
+                "FPT - Tổ chức ĐHĐCĐ thường niên 2019",
+                "Ngày GDKHQ: 28/02/2019",
+                "Ngày thực hiện: 29/03/2019",
+                "Ngày chốt: 01/03/2019"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "M"
+        },
+        {
+            "id": "981006",
+            "time": 1534352400,
+            "tooltip": [
+                "FPT - Trả cổ tức Đợt 1, 2018 bằng tiền 1000 VND/CP",
+                "Ngày GDKHQ: 16/08/2018",
+                "Ngày thực hiện: 31/08/2018",
+                "Ngày chốt: 17/08/2018"
+            ],
+            "shape": "circle",
+            "color": "blue",
+            "label": "D"
+        },
+        {
+            "id": "970829",
+            "time": 1532365200,
+            "tooltip": [
+                "FPT - Niêm yết thêm 80.021.111 cổ phiếu",
+                "Ngày thực hiện: 24/07/2018"
+            ],
+            "shape": "circle",
+            "color": "blue",
+            "label": "A"
+        },
+        {
+            "id": "1255641",
+            "time": 1528218000,
+            "tooltip": [
+                "FPT - Mua cổ phiếu quỹ",
+                "Ngày thực hiện: 06/06/2018"
+            ],
+            "shape": "circle",
+            "color": "blue",
+            "label": "T"
+        },
+        {
+            "id": "960098",
+            "time": 1527181200,
+            "tooltip": [
+                "FPT - Trả cổ tức Đợt 2, 2017 bằng tiền 1500 VND/CP",
+                "Ngày GDKHQ: 25/05/2018",
+                "Ngày thực hiện: 08/06/2018",
+                "Ngày chốt: 28/05/2018"
+            ],
+            "shape": "circle",
+            "color": "blue",
+            "label": "D"
+        },
+        {
+            "id": "36764",
+            "time": 1524458940,
+            "tooltip": [
+                "Niêm yết thêm",
+                "Ngày thực hiện: 23/04/2018"
+            ],
+            "shape": "circle",
+            "color": "blue",
+            "label": "A"
+        },
+        {
+            "id": "37757",
+            "time": 1524456780,
+            "tooltip": [
+                "Niêm yết thêm",
+                "Ngày thực hiện: 23/04/2018"
+            ],
+            "shape": "circle",
+            "color": "blue",
+            "label": "A"
+        },
+        {
+            "id": "53475",
+            "time": 1524416400,
+            "tooltip": [
+                "FPT-Niêm yết bổ sung 296.525 cổ phiếu",
+                "Ngày thực hiện: 23/04/2018"
+            ],
+            "shape": "circle",
+            "color": "blue",
+            "label": "A"
+        },
+        {
+            "id": "786276",
+            "time": 1519837200,
+            "tooltip": [
+                "FPT-Bổ nhiệm ông Nguyễn Văn Khoa và ông Hoàng Việt Anh chức vụ Phó TGĐ từ ngày 01/03/2018",
+                "Ngày thực hiện: 01/03/2018"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "P"
+        },
+        {
+            "id": "887031",
+            "time": 1519750800,
+            "tooltip": [
+                "FPT-Tổ chức ĐHĐCĐ thường niên năm 2018",
+                "Ngày GDKHQ: 28/02/2018",
+                "Ngày thực hiện: 05/04/2018",
+                "Ngày chốt: 01/03/2018"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "M"
+        },
+        {
+            "id": "887030",
+            "time": 1517158800,
+            "tooltip": [
+                "FPT-Nghị quyết HĐQT ngày 29/01/2018",
+                "Ngày thực hiện: 29/01/2018"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "B"
+        },
+        {
+            "id": "786275",
+            "time": 1515949200,
+            "tooltip": [
+                "FPT-Miễn nhiệm ông Dương Dũng Triều chức vụ Phó TGĐ Toàn cầu hóa từ ngày 15/01/2018",
+                "Ngày thực hiện: 15/01/2018"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "P"
+        },
+        {
+            "id": "383925",
+            "time": 1508173200,
+            "tooltip": [
+                "FPT-Bổ nhiệm bà Bùi Nguyễn Phương Châu chức vụ Người được ủy quyền công bố thông tin thay thế ông Trấn Hồng Dương từ ngày 17/10/2017",
+                "Ngày thực hiện: 17/10/2017"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "P"
+        },
+        {
+            "id": "342785",
+            "time": 1505062800,
+            "tooltip": [
+                "FPT-Nghị quyết HĐQT ngày 11/09/2017",
+                "Ngày thực hiện: 11/09/2017"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "B"
+        },
+        {
+            "id": "211355",
+            "time": 1502902800,
+            "tooltip": [
+                "FPT - Trả cổ tức Đợt 1, 2017 bằng tiền 1000 VND/CP",
+                "Ngày GDKHQ: 17/08/2017",
+                "Ngày thực hiện: 31/08/2017",
+                "Ngày chốt: 18/08/2017"
+            ],
+            "shape": "circle",
+            "color": "blue",
+            "label": "D"
+        },
+        {
+            "id": "211342",
+            "time": 1501520400,
+            "tooltip": [
+                "FPT-Nghị quyết HĐQT ngày 01/08/2017",
+                "Ngày thực hiện: 01/08/2017"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "B"
+        },
+        {
+            "id": "211341",
+            "time": 1501520400,
+            "tooltip": [
+                "FPT-Nghị quyết HĐQT ngày 01/08/2017",
+                "Ngày thực hiện: 01/08/2017"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "B"
+        },
+        {
+            "id": "149882",
+            "time": 1499619600,
+            "tooltip": [
+                "FPT-Niêm yết bổ sung 68.238.051 cổ phiếu",
+                "Ngày thực hiện: 10/07/2017"
+            ],
+            "shape": "circle",
+            "color": "blue",
+            "label": "A"
+        },
+        {
+            "id": "109122",
+            "time": 1497459600,
+            "tooltip": [
+                "FPT-Nghị quyết HĐQT ngày 15/06/2017",
+                "Ngày thực hiện: 15/06/2017"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "B"
+        },
+        {
+            "id": "87402",
+            "time": 1495645200,
+            "tooltip": [
+                "FPT - Trả cổ tức Đợt 2, 2016 bằng tiền 1000 VND/CP",
+                "Ngày GDKHQ: 25/05/2017",
+                "Ngày thực hiện: 09/06/2017",
+                "Ngày chốt: 26/05/2017"
+            ],
+            "shape": "circle",
+            "color": "blue",
+            "label": "D"
+        },
+        {
+            "id": "87727",
+            "time": 1494522000,
+            "tooltip": [
+                "FPT-Nghị quyết HĐQT ngày 12/05/2017",
+                "Ngày thực hiện: 12/05/2017"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "B"
+        },
+        {
+            "id": "86457",
+            "time": 1492621200,
+            "tooltip": [
+                "FPT-Nghị quyết HĐQT ngày 20/04/2017",
+                "Ngày thực hiện: 20/04/2017"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "B"
+        },
+        {
+            "id": "85325",
+            "time": 1491152400,
+            "tooltip": [
+                "FPT-Bổ nhiệm ông Nguyễn Việt Thắng chức vụ Trưởng BKS",
+                "Ngày thực hiện: 03/04/2017"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "P"
+        },
+        {
+            "id": "85126",
+            "time": 1490893200,
+            "tooltip": [
+                "FPT- Nghị quyết đại hội cổ đông thường niên năm 2017",
+                "Ngày thực hiện: 31/03/2017"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "R"
+        },
+        {
+            "id": "85125",
+            "time": 1490893200,
+            "tooltip": [
+                "FPT-Bổ nhiệm ông Trương Gia Bình chức vụ Chủ tịch HĐQT và ông Bùi Quang Ngọc chức vụ Phó Chủ tịch HĐQT ",
+                "Ngày thực hiện: 31/03/2017"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "P"
+        },
+        {
+            "id": "83447",
+            "time": 1489078800,
+            "tooltip": [
+                "FPT-Nghị quyết HĐQT ngày 10/03/2017",
+                "Ngày thực hiện: 10/03/2017"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "B"
+        },
+        {
+            "id": "82205",
+            "time": 1488214800,
+            "tooltip": [
+                "FPT-Tổ chức ĐHĐCĐ thường niên năm 2017",
+                "Ngày GDKHQ: 28/02/2017",
+                "Ngày thực hiện: 31/03/2017",
+                "Ngày chốt: 01/03/2017"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "M"
+        },
+        {
+            "id": "81949",
+            "time": 1486918800,
+            "tooltip": [
+                "FPT-Nghị quyết HĐQT ngày 13/02/2017",
+                "Ngày thực hiện: 13/02/2017"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "B"
+        },
+        {
+            "id": "80642",
+            "time": 1484067600,
+            "tooltip": [
+                "FPT-Bổ nhiệm ông Trần Hồng Dương chức vụ Người CBTT thay thế bà Bùi Nguyễn Phương ",
+                "Ngày thực hiện: 11/01/2017"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "P"
+        },
+        {
+            "id": "80308",
+            "time": 1483203600,
+            "tooltip": [
+                "FPT-Miễn nhiệm ông Nguyễn Khắc Thành chức vụ Phó TGĐ phụ trách nguồn lực Toàn Cầu hóa ",
+                "Ngày thực hiện: 01/01/2017"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "P"
+        },
+        {
+            "id": "54945",
+            "time": 1471798800,
+            "tooltip": [
+                "FPT-Tạm ứng cổ tức đợt 1 năm 2016 bằng tiền 1.000VND/CP",
+                "Ngày GDKHQ: 22/08/2016",
+                "Ngày thực hiện: 07/09/2016",
+                "Ngày chốt: 23/08/2016"
+            ],
+            "shape": "circle",
+            "color": "blue",
+            "label": "D"
+        },
+        {
+            "id": "54387",
+            "time": 1469379600,
+            "tooltip": [
+                "FPT-Nghị quyết HĐQT ngày 25/07/2016",
+                "Ngày thực hiện: 25/07/2016"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "B"
+        },
+        {
+            "id": "53474",
+            "time": 1468429200,
+            "tooltip": [
+                "FPT-Niêm yết bổ sung 59.313.718 cổ phiếu",
+                "Ngày thực hiện: 14/07/2016"
+            ],
+            "shape": "circle",
+            "color": "blue",
+            "label": "A"
+        },
+        {
+            "id": "53509",
+            "time": 1467824400,
+            "tooltip": [
+                "FPT-Nghị quyết HĐQT ngày 07/07/2016",
+                "Ngày thực hiện: 07/07/2016"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "B"
+        },
+        {
+            "id": "37756",
+            "time": 1465186260,
+            "tooltip": [
+                "Niêm yết thêm",
+                "Ngày thực hiện: 06/06/2016"
+            ],
+            "shape": "circle",
+            "color": "blue",
+            "label": "A"
+        },
+        {
+            "id": "51995",
+            "time": 1464282000,
+            "tooltip": [
+                "FPT-Trả cổ tức còn lại năm 2015 bằng tiền 1.000VND/cổ phiếu",
+                "Ngày GDKHQ: 27/05/2016",
+                "Ngày thực hiện: 10/06/2016",
+                "Ngày chốt: 30/05/2016"
+            ],
+            "shape": "circle",
+            "color": "blue",
+            "label": "D"
+        },
+        {
+            "id": "50912",
+            "time": 1461603600,
+            "tooltip": [
+                "FPT-Nghị quyết HĐQT ngày 26/04/2016",
+                "Ngày thực hiện: 26/04/2016"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "B"
+        },
+        {
+            "id": "49824",
+            "time": 1461085200,
+            "tooltip": [
+                "FPT-Công ty TNHH MTV Đầu tư SCIC (SIC) đăng ký mua 550.000 CP",
+                "Ngày thực hiện: 20/04/2016"
+            ],
+            "shape": "earning",
+            "color": "purple",
+            "label": "I"
+        },
+        {
+            "id": "49360",
+            "time": 1459702800,
+            "tooltip": [
+                "FPT-Công ty TNHH MTV Đầu tư SCIC (SIC) đã mua 400.000 CP",
+                "Ngày thực hiện: 04/04/2016"
+            ],
+            "shape": "earning",
+            "color": "purple",
+            "label": "I"
+        },
+        {
+            "id": "48876",
+            "time": 1459357200,
+            "tooltip": [
+                "FPT-Nghị quyết đại hội cổ đông thường niên 2016",
+                "Ngày thực hiện: 31/03/2016"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "R"
+        },
+        {
+            "id": "44459",
+            "time": 1457974800,
+            "tooltip": [
+                "FPT-Ông Đỗ Cao Bảo chức vụ Phó TGĐ phụ trách Kinh doanh từ ngày 15/03/2016",
+                "Ngày thực hiện: 15/03/2016"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "P"
+        },
+        {
+            "id": "47181",
+            "time": 1457888400,
+            "tooltip": [
+                "FPT-Nghị quyết HĐQT về việc phát hành cổ phiếu cho CB CNV",
+                "Ngày thực hiện: 14/03/2016"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "B"
+        },
+        {
+            "id": "46954",
+            "time": 1457888400,
+            "tooltip": [
+                "FPT-Công ty TNHH MTV Đầu tư SCIC đăng ký mua 400,000 cổ phiếu ",
+                "Ngày thực hiện: 14/03/2016"
+            ],
+            "shape": "earning",
+            "color": "purple",
+            "label": "I"
+        },
+        {
+            "id": "47076",
+            "time": 1457542800,
+            "tooltip": [
+                "FPT-Nghị quyết HĐQT ngày 10/3/2016",
+                "Ngày thực hiện: 10/03/2016"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "B"
+        },
+        {
+            "id": "44930",
+            "time": 1456160400,
+            "tooltip": [
+                "FPT-Tổ chức Đại hội đồng cổ đông thường niên năm 2016",
+                "Ngày GDKHQ: 23/02/2016",
+                "Ngày thực hiện: 31/03/2016",
+                "Ngày chốt: 24/02/2016"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "M"
+        },
+        {
+            "id": "45616",
+            "time": 1455728400,
+            "tooltip": [
+                "FPT-Tổng Công ty Cổ phần Bảo Minh đã mua 50.000 CP",
+                "Ngày thực hiện: 18/02/2016"
+            ],
+            "shape": "earning",
+            "color": "purple",
+            "label": "I"
+        },
+        {
+            "id": "45019",
+            "time": 1454518800,
+            "tooltip": [
+                "FPT-Công ty TNHH MTV Đầu tư SCIC (SIC) đã mua 311.780 CP",
+                "Ngày thực hiện: 04/02/2016"
+            ],
+            "shape": "earning",
+            "color": "purple",
+            "label": "I"
+        },
+        {
+            "id": "44733",
+            "time": 1454346000,
+            "tooltip": [
+                "FPT-Nghị quyết HĐQT ngày 02/02/2016",
+                "Ngày thực hiện: 02/02/2016"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "B"
+        },
+        {
+            "id": "44460",
+            "time": 1453914000,
+            "tooltip": [
+                "FPT-Nghị quyết HĐQT ngày 28/01/2016",
+                "Ngày thực hiện: 28/01/2016"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "B"
+        },
+        {
+            "id": "43689",
+            "time": 1453222800,
+            "tooltip": [
+                "FPT-Tổng Công ty Cổ phần Bảo Minh đăng ký mua 100.000 CP",
+                "Ngày thực hiện: 20/01/2016"
+            ],
+            "shape": "earning",
+            "color": "purple",
+            "label": "I"
+        },
+        {
+            "id": "43473",
+            "time": 1452790800,
+            "tooltip": [
+                "FPT-Công ty TNHH MTV Đầu tư SCIC (SIC) đăng ký mua 730.000 CP",
+                "Ngày thực hiện: 15/01/2016"
+            ],
+            "shape": "earning",
+            "color": "purple",
+            "label": "I"
+        },
+        {
+            "id": "38372",
+            "time": 1438228380,
+            "tooltip": [
+                "Họp Hội đồng Quản trị",
+                "Ngày thực hiện: 30/07/2015"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "B"
+        },
+        {
+            "id": "37755",
+            "time": 1437450780,
+            "tooltip": [
+                "Niêm yết thêm",
+                "Ngày thực hiện: 21/07/2015"
+            ],
+            "shape": "circle",
+            "color": "blue",
+            "label": "A"
+        },
+        {
+            "id": "35873",
+            "time": 1430131680,
+            "tooltip": [
+                "Họp Hội đồng Quản trị",
+                "Ngày thực hiện: 27/04/2015"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "B"
+        },
+        {
+            "id": "34597",
+            "time": 1428043320,
+            "tooltip": [
+                "Nghị quyết đại hội cổ đông thường niên",
+                "Ngày thực hiện: 03/04/2015"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "R"
+        },
+        {
+            "id": "34661",
+            "time": 1427871300,
+            "tooltip": [
+                "Thay đổi BLĐ",
+                "Ngày thực hiện: 01/04/2015"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "P"
+        },
+        {
+            "id": "34345",
+            "time": 1427681760,
+            "tooltip": [
+                "Họp Hội đồng Quản trị",
+                "Ngày thực hiện: 30/03/2015"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "B"
+        },
+        {
+            "id": "33783",
+            "time": 1426756380,
+            "tooltip": [
+                "Họp Hội đồng Quản trị",
+                "Ngày thực hiện: 19/03/2015"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "B"
+        },
+        {
+            "id": "32248",
+            "time": 1422497880,
+            "tooltip": [
+                "Họp Hội đồng Quản trị",
+                "Ngày thực hiện: 29/01/2015"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "B"
+        },
+        {
+            "id": "32331",
+            "time": 1422431220,
+            "tooltip": [
+                "Họp Hội đồng Quản trị",
+                "Ngày thực hiện: 28/01/2015"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "B"
+        },
+        {
+            "id": "30551",
+            "time": 1414748520,
+            "tooltip": [
+                "Họp Hội đồng Quản trị",
+                "Ngày thực hiện: 31/10/2014"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "B"
+        },
+        {
+            "id": "27731",
+            "time": 1403852040,
+            "tooltip": [
+                "Niêm yết thêm",
+                "Ngày thực hiện: 27/06/2014"
+            ],
+            "shape": "circle",
+            "color": "blue",
+            "label": "A"
+        },
+        {
+            "id": "27359",
+            "time": 1401329340,
+            "tooltip": [
+                "Họp Hội đồng Quản trị",
+                "Ngày thực hiện: 29/05/2014"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "B"
+        },
+        {
+            "id": "26482",
+            "time": 1398676080,
+            "tooltip": [
+                "Thay đổi BLĐ",
+                "Ngày thực hiện: 28/04/2014"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "P"
+        },
+        {
+            "id": "26290",
+            "time": 1398312480,
+            "tooltip": [
+                "Kết quả kinh doanh quý",
+                "Ngày thực hiện: 24/04/2014"
+            ],
+            "shape": "earning",
+            "color": "purple",
+            "label": "S"
+        },
+        {
+            "id": "25569",
+            "time": 1396868280,
+            "tooltip": [
+                "Họp Hội đồng Quản trị",
+                "Ngày thực hiện: 07/04/2014"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "B"
+        },
+        {
+            "id": "24521",
+            "time": 1394503260,
+            "tooltip": [
+                "Họp Hội đồng Quản trị",
+                "Ngày thực hiện: 11/03/2014"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "B"
+        },
+        {
+            "id": "23929",
+            "time": 1392180240,
+            "tooltip": [
+                "Họp Hội đồng Quản trị",
+                "Ngày thực hiện: 12/02/2014"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "B"
+        },
+        {
+            "id": "21817",
+            "time": 1375264980,
+            "tooltip": [
+                "Họp Hội đồng Quản trị",
+                "Ngày thực hiện: 31/07/2013"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "B"
+        },
+        {
+            "id": "21801",
+            "time": 1375264020,
+            "tooltip": [
+                "Thay đổi BLĐ",
+                "Ngày thực hiện: 31/07/2013"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "P"
+        },
+        {
+            "id": "21367",
+            "time": 1371695100,
+            "tooltip": [
+                "Họp Hội đồng Quản trị",
+                "Ngày thực hiện: 20/06/2013"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "B"
+        },
+        {
+            "id": "20821",
+            "time": 1364893800,
+            "tooltip": [
+                "Họp Hội đồng Quản trị",
+                "Ngày thực hiện: 02/04/2013"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "B"
+        },
+        {
+            "id": "20750",
+            "time": 1363845120,
+            "tooltip": [
+                "Họp Hội đồng Quản trị",
+                "Ngày thực hiện: 21/03/2013"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "B"
+        },
+        {
+            "id": "20252",
+            "time": 1359960840,
+            "tooltip": [
+                "Họp Hội đồng Quản trị",
+                "Ngày thực hiện: 04/02/2013"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "B"
+        },
+        {
+            "id": "19389",
+            "time": 1352429340,
+            "tooltip": [
+                "Họp Hội đồng Quản trị",
+                "Ngày thực hiện: 09/11/2012"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "B"
+        },
+        {
+            "id": "18890",
+            "time": 1348729500,
+            "tooltip": [
+                "Thay đổi BLĐ",
+                "Ngày thực hiện: 27/09/2012"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "P"
+        },
+        {
+            "id": "18435",
+            "time": 1344909780,
+            "tooltip": [
+                "Thay đổi BLĐ",
+                "Ngày thực hiện: 14/08/2012"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "P"
+        },
+        {
+            "id": "18401",
+            "time": 1344580560,
+            "tooltip": [
+                "Họp Hội đồng Quản trị",
+                "Ngày thực hiện: 10/08/2012"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "B"
+        },
+        {
+            "id": "18148",
+            "time": 1343701380,
+            "tooltip": [
+                "Niêm yết thêm",
+                "Ngày thực hiện: 31/07/2012"
+            ],
+            "shape": "circle",
+            "color": "blue",
+            "label": "A"
+        },
+        {
+            "id": "17972",
+            "time": 1342690560,
+            "tooltip": [
+                "Niêm yết thêm",
+                "Ngày thực hiện: 19/07/2012"
+            ],
+            "shape": "circle",
+            "color": "blue",
+            "label": "A"
+        },
+        {
+            "id": "16212",
+            "time": 1334560980,
+            "tooltip": [
+                "Họp Hội đồng Quản trị",
+                "Ngày thực hiện: 16/04/2012"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "B"
+        },
+        {
+            "id": "15836",
+            "time": 1333523820,
+            "tooltip": [
+                "Họp Hội đồng Quản trị",
+                "Ngày thực hiện: 04/04/2012"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "B"
+        },
+        {
+            "id": "14632",
+            "time": 1330343580,
+            "tooltip": [
+                "Họp Hội đồng Quản trị",
+                "Ngày thực hiện: 27/02/2012"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "B"
+        },
+        {
+            "id": "12598",
+            "time": 1320228240,
+            "tooltip": [
+                "Họp Hội đồng Quản trị",
+                "Ngày thực hiện: 02/11/2011"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "B"
+        },
+        {
+            "id": "12335",
+            "time": 1319604240,
+            "tooltip": [
+                "Thay đổi BLĐ",
+                "Ngày thực hiện: 26/10/2011"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "P"
+        },
+        {
+            "id": "11987",
+            "time": 1318839780,
+            "tooltip": [
+                "Niêm yết thêm",
+                "Ngày thực hiện: 17/10/2011"
+            ],
+            "shape": "circle",
+            "color": "blue",
+            "label": "A"
+        },
+        {
+            "id": "11844",
+            "time": 1317899880,
+            "tooltip": [
+                "Niêm yết thêm",
+                "Ngày thực hiện: 06/10/2011"
+            ],
+            "shape": "circle",
+            "color": "blue",
+            "label": "A"
+        },
+        {
+            "id": "11916",
+            "time": 1317643260,
+            "tooltip": [
+                "Giao dịch cổ phiếu quỹ",
+                "Ngày thực hiện: 03/10/2011"
+            ],
+            "shape": "circle",
+            "color": "blue",
+            "label": "T"
+        },
+        {
+            "id": "11252",
+            "time": 1313728800,
+            "tooltip": [
+                "Họp Hội đồng Quản trị",
+                "Ngày thực hiện: 19/08/2011"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "B"
+        },
+        {
+            "id": "11034",
+            "time": 1313142660,
+            "tooltip": [
+                "Niêm yết thêm",
+                "Ngày thực hiện: 12/08/2011"
+            ],
+            "shape": "circle",
+            "color": "blue",
+            "label": "A"
+        },
+        {
+            "id": "11147",
+            "time": 1313055600,
+            "tooltip": [
+                "Họp Hội đồng Quản trị",
+                "Ngày thực hiện: 11/08/2011"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "B"
+        },
+        {
+            "id": "8567",
+            "time": 1303299180,
+            "tooltip": [
+                "Giao dịch cổ phiếu quỹ",
+                "Ngày thực hiện: 20/04/2011"
+            ],
+            "shape": "circle",
+            "color": "blue",
+            "label": "T"
+        },
+        {
+            "id": "8121",
+            "time": 1302145980,
+            "tooltip": [
+                "Họp Hội đồng Quản trị",
+                "Ngày thực hiện: 07/04/2011"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "B"
+        },
+        {
+            "id": "8111",
+            "time": 1302083280,
+            "tooltip": [
+                "Họp Hội đồng Quản trị",
+                "Ngày thực hiện: 06/04/2011"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "B"
+        },
+        {
+            "id": "7982",
+            "time": 1301630280,
+            "tooltip": [
+                "Thay đổi BLĐ",
+                "Ngày thực hiện: 01/04/2011"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "P"
+        },
+        {
+            "id": "7871",
+            "time": 1301375040,
+            "tooltip": [
+                "Thay đổi BLĐ",
+                "Ngày thực hiện: 29/03/2011"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "P"
+        },
+        {
+            "id": "6917",
+            "time": 1301021760,
+            "tooltip": [
+                "Thay đổi BLĐ",
+                "Ngày thực hiện: 25/03/2011"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "P"
+        },
+        {
+            "id": "6810",
+            "time": 1298541900,
+            "tooltip": [
+                "Thay đổi BLĐ",
+                "Ngày thực hiện: 24/02/2011"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "P"
+        },
+        {
+            "id": "6373",
+            "time": 1297327080,
+            "tooltip": [
+                "Họp Hội đồng Quản trị",
+                "Ngày thực hiện: 10/02/2011"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "B"
+        },
+        {
+            "id": "6139",
+            "time": 1296552240,
+            "tooltip": [
+                "Thay đổi BLĐ",
+                "Ngày thực hiện: 01/02/2011"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "P"
+        },
+        {
+            "id": "4930",
+            "time": 1288672860,
+            "tooltip": [
+                "Họp Hội đồng Quản trị",
+                "Ngày thực hiện: 02/11/2010"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "B"
+        },
+        {
+            "id": "4522",
+            "time": 1288560480,
+            "tooltip": [
+                "Thay đổi BLĐ",
+                "Ngày thực hiện: 01/11/2010"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "P"
+        },
+        {
+            "id": "4084",
+            "time": 1284619800,
+            "tooltip": [
+                "Kết quả kinh doanh quý",
+                "Ngày thực hiện: 16/09/2010"
+            ],
+            "shape": "earning",
+            "color": "purple",
+            "label": "S"
+        },
+        {
+            "id": "4166",
+            "time": 1284603840,
+            "tooltip": [
+                "Niêm yết thêm",
+                "Ngày thực hiện: 16/09/2010"
+            ],
+            "shape": "circle",
+            "color": "blue",
+            "label": "A"
+        },
+        {
+            "id": "3468",
+            "time": 1282214100,
+            "tooltip": [
+                "Niêm yết thêm",
+                "Ngày thực hiện: 19/08/2010"
+            ],
+            "shape": "circle",
+            "color": "blue",
+            "label": "A"
+        },
+        {
+            "id": "3453",
+            "time": 1281527820,
+            "tooltip": [
+                "Họp Hội đồng Quản trị",
+                "Ngày thực hiện: 11/08/2010"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "B"
+        },
+        {
+            "id": "3341",
+            "time": 1281005820,
+            "tooltip": [
+                "Niêm yết thêm",
+                "Ngày thực hiện: 05/08/2010"
+            ],
+            "shape": "circle",
+            "color": "blue",
+            "label": "A"
+        },
+        {
+            "id": "2989",
+            "time": 1280141460,
+            "tooltip": [
+                "Họp Hội đồng Quản trị",
+                "Ngày thực hiện: 26/07/2010"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "B"
+        },
+        {
+            "id": "1273",
+            "time": 1278926340,
+            "tooltip": [
+                "Niêm yết thêm",
+                "Ngày thực hiện: 12/07/2010"
+            ],
+            "shape": "circle",
+            "color": "blue",
+            "label": "A"
+        },
+        {
+            "id": "2524",
+            "time": 1271995800,
+            "tooltip": [
+                "Kết quả kinh doanh năm chính thức",
+                "Ngày thực hiện: 23/04/2010"
+            ],
+            "shape": "earning",
+            "color": "purple",
+            "label": "S"
+        },
+        {
+            "id": "1115",
+            "time": 1243476540,
+            "tooltip": [
+                "Đại hội Cổ đông Bất thường",
+                "Ngày thực hiện: 28/05/2009"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "M"
+        },
+        {
+            "id": "1081",
+            "time": 1243304040,
+            "tooltip": [
+                "Họp Hội đồng Quản trị",
+                "Ngày thực hiện: 26/05/2009"
+            ],
+            "shape": "earningUp",
+            "color": "green",
+            "label": "B"
+        },
+        {
+            "id": "835",
+            "time": 1239247560,
+            "tooltip": [
+                "Kết quả kinh doanh năm chính thức",
+                "Ngày thực hiện: 09/04/2009"
+            ],
+            "shape": "earning",
+            "color": "purple",
+            "label": "S"
+        }
+    ],
+    "paging": null,
+    "status": "ok"
+}
