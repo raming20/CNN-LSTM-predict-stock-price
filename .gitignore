@@ -168,3 +168,6 @@ dump_website/
 driver/
 text/
 spark-warehouse/
+
+*.png
+*.jpg

@@ -6,3 +6,15 @@ pyspark==3.5.1
 torch==2.4.0
 scikit-learn==1.5.1
 matplotlib==3.9.2
+yfinance==0.2.41
+scipy==1.13.1
+mplfinance==0.12.10b0
+
+# for CNN
+opencv-python==4.10.0.84
+
+# for deep learning pytorch
+torch==2.4.1
+torchvision==0.19.1
+torchaudio==2.4.1
+

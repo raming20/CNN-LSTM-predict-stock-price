@@ -3,12 +3,22 @@ from pprint import pprint
 import requests
 from urllib.parse import quote, unquote
 import os
+from pathlib import Path
+
+
+def get_selenium_path():
+    current_folder_path = Path().resolve()
+    current_folder_name = current_folder_path.name
+    while current_folder_name != "selenium":
+        current_folder_path = current_folder_path.parent
+        current_folder_name = current_folder_path.name
+    return current_folder_path
 
 
 def construct_folder(parent_folder):
-    folder_of_current_file = os.path.dirname(__file__)
-    request_folder_path = os.path.join(folder_of_current_file, f"../json/{parent_folder}/request")
-    response_folder_path = os.path.join(folder_of_current_file, f"../json/{parent_folder}/response")
+    selenium_folder_path = str(get_selenium_path())
+    request_folder_path = os.path.abspath(os.path.join(selenium_folder_path, f"json/{parent_folder}/request"))
+    response_folder_path = os.path.abspath(os.path.join(selenium_folder_path, f"json/{parent_folder}/response"))
 
     if not os.path.exists(request_folder_path) \
             and not os.path.exists(response_folder_path):
