@@ -256,7 +256,7 @@ def rotate_matrix_180(X):
     return rotate_matrix_180_col(rotate_matrix_180_row(X))
     
 
-def convolution(X: np.ndarray, Filter: np.ndarray, stride=1, padding_row=0, padding_col=0) -> np.ndarray:
+def convolution(X: np.ndarray, Filter: np.ndarray, stride=1, padding_row=0, padding_col=0, bias=0) -> np.ndarray:
     """
     Calculate convolution of tensor X and filter Filter (Filter is also a tensor)
     
@@ -277,9 +277,6 @@ def convolution(X: np.ndarray, Filter: np.ndarray, stride=1, padding_row=0, padd
         Co: number of cols of matrix output 
         Ro and Co be calculated by function output_size_of_convolution
     """
-    
-    assert len(X.shape) == len(
-        Filter.shape), "X and F must have the same number of dimensions."
 
     X_padded = np.zeros(
         (
@@ -307,7 +304,7 @@ def convolution(X: np.ndarray, Filter: np.ndarray, stride=1, padding_row=0, padd
                         start_col:start_col + Filter.shape[1]
                         ] * Filter
             result = np.sum(o)
-            output[output_row][output_col] = result
+            output[output_row][output_col] = result + bias
             start_col += stride
             output_col += 1
 
@@ -443,10 +440,18 @@ def init_bias_kernel() -> int:
 
 def ReLU(X: np.ndarray) -> np.ndarray:
     """
-    Calculate the ReLU value for all elements of the tensor (or matrix) X.
+    Calculate the ReLU value for each elements of the tensor (or matrix) X.
     The output tensor (or matrix) have same size as X.
     """
     return np.maximum(X, 0)
+
+
+def Sigmoid(X: np.ndarray) -> np.ndarray:
+    """
+    Calculate the Sigmoid value for each elements of the tensor (or matrix) X.
+    The output tensor (or matrix) have same size as X.
+    """
+    return 1 / (1 + np.exp((-1) * X))
 
 
 def init_weights(size, method=he_initialization) -> np.ndarray:
@@ -493,6 +498,24 @@ def one_hot(y: np.ndarray) -> np.ndarray:
     one_hot = OneHotEncoder(sparse_output=False)
     y_one_hot = one_hot.fit_transform(y.reshape(-1, 1))
     return y_one_hot.T
+
+
+def decode_one_hot(Y_one_hoted: np.ndarray, y_original: np.ndarray):
+    """
+    Get real values for one-hot matrix.
+    
+    Y_one_hoted is a matrix which values are one-hot or predicted from a neural netword. 
+    Y_one_hoted has size: (C, N), with:
+        C: number of categories into which the data is classified or predicted to.
+        N: number of points data
+    
+    y_original is a array of real values, its values can be duplicated.
+    """
+    N = Y_one_hoted.shape[1]
+    differnt_values = np.sort(np.unique(y_original))
+    max_value_indices = np.argmax(Y_one_hoted, axis=0)
+    
+    return differnt_values[max_value_indices]
 
 
 def cross_entropy_loss(Y_real: np.ndarray, Y_predict: np.ndarray):
@@ -556,283 +579,30 @@ def calculate_cross_entropy_loss_without_softmax_value(Y_real: np.ndarray, Z: np
     return (-1 / N) * np.sum(Y_real * log_Y_predict)
 
 
-def derivative_ReLU(X: np.ndarray):
+def convert_list_tensor_to_tensor(list_tensor: list[np.ndarray]):
     """
-    X is a tensor.
+    list_tensor is a list of tensors or a list of matrix with size: list[(R, C, D)] or list[(R, C)], with:
+        R: number of rows in a face in each tensor or each matrix
+        C: number of cols in a face in each tensor or each matrix
+        D: number of faces in each tensor, with matrix it is equal to 1
+    
+    Combine multiple tensors into one tensor. We can still consider it 
+    like a list of tensors and access it like a list of tensors. 
+    
+    The result will have size: (N, R, C, D) or (N, R, C), with N is number of filters.
     """
-    return np.where(X > 0, 1, 0)
+    return np.array(list_tensor)
 
 
-def derivative_layer_before_max_pooling_one_point(C: np.ndarray, P: np.ndarray, dL_dP: np.ndarray, size: tuple, stride: int):
-    """ 
-    Condition: pooling(C, operator=np.max) = P
-    
-    C is layer before layer P in the CNN, C is a tensor of size: (Rc, Cc, D), with:
-        Rc: number of rows in each face of tensor C
-        Cc: number of cols in each face of tensor C
-        D: deep of tensor or number of faces in tensor C
-    
-    We apply max-pooling in each face of C and the output is tensor P with size: (Rp, Cp, D), with:
-        Rp: number of rows in each face of tensor P
-        Cp: number of cols in each face of tensor P
-        D: deep of tensor or number of faces in tensor P (is also in C)
-        
-    dL_dP is derivative of loss value for P and it is a tensor with same size with P.
-    
-    This function loop through each slide window of tensor C (through all face of C) and 
-    compare elements's value to corresponding value in P (face to face), assign the elements 
-    that have values equals to corresponding value in P value of dL_dP, assigning 0 to other elements.
-    
-    The output tensor has the same size as C.
+def split_chunk_X_Y(list_X, Y, chunk_size):
     """
     
-    assert len(size) == 2, "size must be 2 dimensional"
-
-    output = np.zeros(C.shape)
-
-    C_row_run = 0
-    pool_row_run = 0
-    while C_row_run + size[0] <= C.shape[0] and pool_row_run < output.shape[0]:
-        C_col_run = 0
-        pool_col_run = 0
-        while C_col_run + size[1] <= C.shape[1] and pool_col_run < output.shape[1]:
-
-            slide_window = C[
-                            C_row_run : C_row_run + size[0], 
-                            C_col_run : C_col_run + size[1]
-                            ]
-            output[
-                C_row_run : C_row_run + size[0], 
-                C_col_run : C_col_run + size[1]
-                ] = np.where(
-                    slide_window == P[pool_row_run][pool_col_run], 
-                    dL_dP[pool_row_run][pool_col_run], # Assigning elements in output that have values
-                                                       # equal to corresponding values in P the values of dL_dP
-                    0 # Assigning other elements in output value 0
-                    )
-
-            C_col_run += stride
-            pool_col_run += 1
-
-        C_row_run += stride
-        pool_row_run += 1
-
-    return output
-
-
-def derivative_layer_before_max_pooling_for_multiple_point(list_C: list[np.ndarray], list_P: list[np.ndarray], list_dL_dP: list[np.ndarray], size: tuple, stride: int):
-    """
-    This function applies the derivative for all points of data 
-    (this version is extention of function derivative_layer_before_max_pooling_one_point for a chunk of points data)
-    
-    list_C is a list of tensor C (C in here same C in function derivative_layer_before_max_pooling_one_point) and assumed to have a size: (N, Rc, Cc, D)
-    list_P is a list of tensor P (P in here same P in function derivative_layer_before_max_pooling_one_point) and assumed to have a size: (N, Rp, Cp, D)
-    list_dL_dP is a list of tensor dL_dP (dL_dP in here same dL_dP in function derivative_layer_before_max_pooling_one_point) and assumed to have a size: (N, Rp, Cp, D)
     """
     
-    assert len(size) == 2, "size must be 2 dimensional"
+    N = len(list_X)
+    start = 0
+    while start < N:
+        yield list_X[start:start + chunk_size], \
+                Y[:, start:start + chunk_size]
+        start += chunk_size
 
-    N = len(list_C) # Number of points data len(list_C) = len(list_P) = len(list_dL_dP) = N
-    
-    first_point_C = list_C[0]
-    output = np.zeros([N] + list(first_point_C.shape))
-    
-    C_row = first_point_C.shape[0]
-    C_col = first_point_C.shape[1]
-    
-    first_point_P = list_P[0]
-    P_row = first_point_P.shape[0]
-    P_col = first_point_P.shape[1]
-
-    C_row_run = 0
-    pool_row_run = 0
-    while C_row_run + size[0] <= C_row and pool_row_run < P_row:
-        C_col_run = 0
-        pool_col_run = 0
-        while C_col_run + size[1] <= C_col and pool_col_run < P_col:
-
-            slide_window = list_C[:, 
-                                  C_row_run : C_row_run + size[0], 
-                                  C_col_run : C_col_run + size[1]
-                                ]
-            output[:, 
-                   C_row_run : C_row_run + size[0], 
-                   C_col_run : C_col_run + size[1]
-                ] = np.where(
-                    slide_window == list_P[
-                                            :, 
-                                            pool_row_run : pool_row_run+1, 
-                                            pool_col_run : pool_col_run+1
-                                        ], 
-                    list_dL_dP[:, 
-                               pool_row_run : pool_row_run+1, 
-                               pool_col_run : pool_col_run+1
-                            ],  # Assigning elements in output that have values
-                                # equal to corresponding values in P the values of dL_dP
-                    0 # Assigning other elements in output value 0 
-                )
-
-            C_col_run += stride
-            pool_col_run += 1
-
-        C_row_run += stride
-        pool_row_run += 1
-
-    return output
-
-
-def derivative_for_filter_one_point(P: np.ndarray, dL_dZk: np.ndarray, filter_size: tuple, stride=1, padding_row=0, padding_col=0):
-
-    number_P_row = P.shape[0]
-    number_P_col = P.shape[1]
-    
-    P_padded: np.ndarray = np.zeros(
-        [
-            number_P_row + 2*padding_row, 
-            number_P_col + 2*padding_col
-        ] + list(P.shape[2:])
-    )
-    
-    number_P_padded_row = P_padded.shape[0]
-    number_P_padded_col = P_padded.shape[1]
-    P_padded[
-        padding_row : number_P_padded_row-padding_row,
-        padding_col : number_P_padded_col-padding_col
-    ] = P
-    
-    output = np.zeros(filter_size)
-    
-    
-    first_point_dL_dZk = dL_dZk[0]
-    number_dL_dZk_row = first_point_dL_dZk.shape[0]
-    number_dL_dZk_col = first_point_dL_dZk.shape[1]
-    number_output_row = output.shape[0]
-    number_output_col = output.shape[1]
-    
-    deep_of_filter = filter_size[-1]
-    P_row_run = 0
-    output_row_run = 0
-    while P_row_run + number_dL_dZk_row <= number_P_padded_row and output_row_run < number_output_row:
-        P_col_run = 0
-        output_col_run = 0
-        while P_col_run + number_dL_dZk_col <= number_P_padded_col and output_col_run < number_output_col:
-            for i in range(deep_of_filter):
-                o = P_padded[
-                            :,
-                            P_row_run:P_row_run + number_dL_dZk_row,
-                            P_col_run:P_col_run + number_dL_dZk_col,
-                            i
-                            ] * dL_dZk
-                result = np.sum(o, axis=(1, 2))
-                output[output_row_run, output_col_run, i] = np.sum(result, axis=0)
-            P_col_run += stride
-            output_col_run += 1
-
-        P_row_run += stride
-        output_row_run += 1
-
-    return output
-
-
-def derivative_for_filter_multiple_point(list_P: list[np.ndarray], list_dL_dZk: list[np.ndarray], filter_size: tuple, stride=1, padding_row=0, padding_col=0):
-    N = len(list_P) # Number of points data, len(list_P) = len(list_dL_dZk) = N
-    first_point_P = list_P[0]
-    number_P_row = first_point_P.shape[0]
-    number_P_col = first_point_P.shape[1]
-    
-    assert len(list_P[0].shape) == len(
-        list_dL_dZk.shape), "X and F must have the same number of dimensions."
-    
-    list_P_padded: list[np.ndarray] = np.zeros(
-        [N] + [
-            number_P_row + 2*padding_row, 
-            number_P_col + 2*padding_col
-        ] + list(first_point_P.shape[2:])
-    )
-    
-    first_point_P_padded = list_P_padded[0]
-    number_P_padded_row = first_point_P_padded.shape[0]
-    number_P_padded_col = first_point_P_padded.shape[1]
-    list_P_padded[
-        :,
-        padding_row : number_P_padded_row-padding_row,
-        padding_col : number_P_padded_col-padding_col
-    ] = list_P
-    
-    output = np.zeros(filter_size)
-    
-    
-    first_point_dL_dZk = list_dL_dZk[0]
-    number_dL_dZk_row = first_point_dL_dZk.shape[0]
-    number_dL_dZk_col = first_point_dL_dZk.shape[1]
-    number_output_row = output.shape[0]
-    number_output_col = output.shape[1]
-    
-    deep_of_filter = filter_size[-1]
-    P_row_run = 0
-    output_row_run = 0
-    while P_row_run + number_dL_dZk_row <= number_P_padded_row and output_row_run < number_output_row:
-        P_col_run = 0
-        output_col_run = 0
-        while P_col_run + number_dL_dZk_col <= number_P_padded_col and output_col_run < number_output_col:
-            for i in range(deep_of_filter):
-                o = list_P_padded[
-                            :,
-                            P_row_run:P_row_run + number_dL_dZk_row,
-                            P_col_run:P_col_run + number_dL_dZk_col,
-                            i
-                            ] * list_dL_dZk
-                result = np.sum(o, axis=(1, 2))
-                output[output_row_run, output_col_run, i] = np.sum(result, axis=0)
-            P_col_run += stride
-            output_col_run += 1
-
-        P_row_run += stride
-        output_row_run += 1
-
-    return output
-
-
-def derivative_for_bias_kernel(list_dL_dZk: list[np.ndarray]):
-    return np.sum(list_dL_dZk)
-
-
-def convolution_two_list_matrix(list_X: list[np.ndarray], list_filter: list[np.ndarray], stride: int):
-    pass
-
-
-def derivative_layer_input_convolution(P: np.ndarray, list_Filter: list[np.ndarray], dL_dZk: np.ndarray, stride: int):
-    """
-        P: is layer input for convolution
-        list_Filter: list of filter applied to P
-        dL_dZk: derivative of layer output of convolution, here is Zk
-        
-        We have:
-            conv(P, list_Filter) = Zk
-    """
-    
-    output = np.zeros(P.shape)
-    
-    P_copy = P.copy()
-    
-    # Convert matrix to tensor with deep = 1
-    if len(P.shape) == 2:
-        P_copy = P_copy.reshape(list(P.shape) + [1])
-    
-    first_filter = list_Filter[0]
-    dL_dZk_padded_dilationed = add_padding(add_dilation(dL_dZk, stride-1), first_filter.shape[0] - 1, first_filter.shape[1] - 1)
-    list_Filter = [rotate_matrix_180(filter) for filter in list_Filter]
-    
-    def convert_list_filter_to_tensor(list_filter):
-        first_filter = list_Filter[0]
-        output = np.zeros([len(list_filter)] + list(first_filter.shape))
-        for i, filter in enumerate(list_Filter):
-            output[i] = filter
-            
-    list_Filter = convert_list_filter_to_tensor(list_Filter)
-    
-    deep_of_P_copy = P_copy.shape[-1]
-    for i in range(deep_of_P_copy):
-        pass
-        
-  
