@@ -11,7 +11,7 @@ from utils_cnn import (
 	rotate_matrix_180,
 	convolution,
 	convolution_multiple_kernel,
-	pooling,
+	pooling_one_point,
 	glorot_uniform_initialization,
 	he_initialization,
 	init_kernel,

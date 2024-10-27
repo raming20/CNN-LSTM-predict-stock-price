@@ -354,9 +354,84 @@ def convolution_multiple_kernel(X: np.ndarray, list_Filter: list[np.ndarray], li
             X, F, stride, padding_row, padding_col) + list_Bias[i]
 
     return output
+
+
+def convolution_multiple_kernel_multiple_point(
+    list_X: list[np.ndarray], 
+    list_Filter: list[np.ndarray], 
+    list_Bias: list[int], 
+    stride=1, 
+    padding_row=0, 
+    padding_col=0) -> list[np.ndarray]:
+    """
+    This function applies the pooling for all points of data 
+    (this version is extention of function convolution_multiple_kernel for a chunk of points data)
+    
+    list_X is a list of tensors X (X in here same 
+    X in function convolution_multiple_kernel) and assumed to have a size: (N, Rx, Cx, Dx)
+    
+    This function will loop through all slide window (through all points of data) and 
+    and calculate convolution value of each point with filter.
+    
+    The output is a list of tensor with size: (N, Ro, Co, len(list_Filter)).
+    """
+    N = len(list_X)
+    
+    first_X = list_X[0]
+    number_X_row = first_X.shape[0]
+    number_X_col = first_X.shape[1]
+    
+    first_filter = list_Filter[0]
+    number_filter_row = first_filter.shape[0]
+    number_filter_col = first_filter.shape[1]
+    
+    (
+        number_output_row, 
+        number_output_col
+    ) = output_size_of_convolution(
+                            first_X.shape, 
+                            first_filter.shape, 
+                            stride, 
+                            padding_row, 
+                            padding_col)
+    
+    number_filter = len(list_Filter)
+    
+    output = np.zeros((N, int(number_output_row), int(number_output_col), number_filter))
+
+    X_row_run = 0
+    output_row_run = 0
+    while X_row_run + number_filter_row <= number_X_row and output_row_run < number_output_row:
+        X_col_run = 0
+        output_col_run = 0
+        while X_col_run + number_filter_col <= number_X_col and output_col_run < number_output_col:
+            for i in range(number_filter):
+                
+                filter = list_Filter[i]
+                bias = list_Bias[i]
+                slide_window = list_X[
+                            :,
+                            X_row_run:X_row_run + number_filter_row,
+                            X_col_run:X_col_run + number_filter_col,
+                            :
+                        ]
+                o1 = slide_window * filter
+                o2 = np.sum(o1, axis=(1, 2, 3), keepdims=True) + bias
+                output[:, 
+                    output_row_run : output_row_run + 1, 
+                    output_col_run : output_col_run + 1, 
+                    i : i + 1] = o2
+            
+            X_col_run += stride
+            output_col_run += 1
+
+        X_row_run += stride
+        output_row_run += 1
+
+    return output
         
   
-def pooling(X: np.ndarray, size: int, operator=np.max, stride=1) -> np.ndarray:
+def pooling_one_point(X: np.ndarray, size: int, operator=np.max, stride=1) -> np.ndarray:
     """
     Apply pooling to tensor X.
     
@@ -372,26 +447,93 @@ def pooling(X: np.ndarray, size: int, operator=np.max, stride=1) -> np.ndarray:
     """
     
     assert len(size) == 2, "size must be 2 dimensional"
+    
+    number_X_row = X.shape[0]
+    number_X_col = X.shape[1]
 
-    output_row = int((X.shape[0] - size[0]) / stride) + 1
-    output_col = int((X.shape[1] - size[1]) / stride) + 1
+    number_output_row = int((X.shape[0] - size[0]) / stride) + 1
+    number_output_col = int((X.shape[1] - size[1]) / stride) + 1
 
-    output = np.zeros((int(output_row), int(output_col)) + X.shape[2:])
+    output = np.zeros((int(number_output_row), int(number_output_col)) + X.shape[2:])
 
-    start_row = 0
-    output_row = 0
-    while start_row + size[0] <= X.shape[0] and output_row < output.shape[0]:
-        start_col = 0
-        output_col = 0
-        while start_col + size[1] <= X.shape[1] and output_col < output.shape[1]:
-            o = operator(X[start_row:start_row + size[0],
-                         start_col:start_col + size[1]], axis=(0, 1))
-            output[output_row][output_col] = o
-            start_col += stride
-            output_col += 1
+    X_row_run = 0
+    output_row_run = 0
+    while X_row_run + size[0] <= number_X_row and output_row_run < number_output_row:
+        X_col_run = 0
+        output_col_run = 0
+        
+        while X_col_run + size[1] <= number_X_col and output_col_run < number_output_col:
+            o = operator(
+                    X[
+                        X_row_run : X_row_run + size[0],
+                        X_col_run : X_col_run + size[1]
+                    ], 
+                    axis=(0, 1)
+                )
+            output[output_row_run][output_col_run] = o
+            
+            X_col_run += stride
+            output_col_run += 1
 
-        start_row += stride
-        output_row += 1
+        X_row_run += stride
+        output_row_run += 1
+
+    return output
+        
+  
+def pooling_multiple_point(list_X: list[np.ndarray], size: int, operator=np.max, stride=1) -> np.ndarray:
+    """
+    This function applies the pooling for all points of data 
+    (this version is extention of function pooling_one_point for a chunk of points data)
+    
+    list_X is a list of tensors X (X in here same 
+    X in function pooling_one_point) and assumed to have a size: (N, Rx, Cx, Dx)
+    
+    This function will loop through all slide window (through all points of data 
+    and all deep of each point) and find the max element.
+    
+    The output is a list of tensor with same size with list_x.
+    """
+    
+    assert len(size) == 2, "size must be 2 dimensional"
+
+    N = len(list_X)
+    
+    fisrt_X = list_X[0]
+    number_X_row = fisrt_X.shape[0]
+    number_X_col = fisrt_X.shape[1]
+    
+    number_output_row = int((number_X_row - size[0]) / stride) + 1
+    number_output_col = int((number_X_col - size[1]) / stride) + 1
+
+    output = np.zeros((N, number_output_row, number_output_col) + fisrt_X.shape[2:])
+
+    X_row_run = 0
+    output_row_run = 0
+    while X_row_run + size[0] <= number_X_row and output_row_run < number_output_row:
+        X_col_run = 0
+        output_col_run = 0
+        while X_col_run + size[1] <= number_X_col and output_col_run < number_output_col:
+            o = operator(
+                    list_X[
+                        :,
+                        X_row_run:X_row_run + size[0],
+                        X_col_run:X_col_run + size[1],
+                        :
+                    ], 
+                    axis=(1, 2),
+                    keepdims=True
+                )
+            output[:, 
+                   output_row_run : output_row_run + 1, 
+                   output_col_run : output_col_run + 1, 
+                   :] = o
+            
+            X_col_run += stride
+            output_col_run += 1
+
+        X_row_run += stride
+        output_row_run += 1
 
     return output
 
