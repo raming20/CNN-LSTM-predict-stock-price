@@ -292,11 +292,69 @@ def attention_cnn(image_shape, lstm_units=64, days_result=3):
     return attention_model(image_shape, lstm_units, days_result)
 
 
+def attention_cnn_2(image_shape, lstm_units=64, days_result=3):
+
+    # Hàm Attention
+    def attention_3d_block(inputs):
+        # inputs.shape = (batch_sizes, time_steps=days_result, features=lstm_units)
+        time_steps = inputs.shape[1]
+        
+        a = keras.layers.Permute((2, 1))(inputs)  # (batch_sizes, features=lstm_units, time_steps=days_result)
+        
+        # Tính attention score: (batch_sizes, features=lstm_units, time_steps=days_result)
+        # Softmax áp dụng trên axis cuối
+        a = keras.layers.Dense(time_steps, activation='softmax')(a)  
+        
+        # Trả về attention score theo thứ tự: (batch_sizes, time_steps=days_result, features=lstm_units)
+        a_probs = keras.layers.Permute((2, 1))(a)  
+        
+        # Tính trọng số của inputs với attention score: (batch_sizes, time_steps=days_result, features=lstm_units)
+        output_attention_mul = keras.layers.Multiply()([inputs, a_probs])  
+        
+        return output_attention_mul
+
+    # Mô hình CNN-LSTM với Attention
+    inputs = keras.layers.Input(shape=image_shape)
+    
+    # Các lớp CNN để trích xuất đặc trưng từ ảnh
+    x = keras.layers.Conv2D(32, (3, 3), activation='relu')(inputs)
+    x = keras.layers.MaxPooling2D((2, 2))(x)
+    x = keras.layers.Conv2D(64, (3, 3), activation='relu')(x)
+    x = keras.layers.MaxPooling2D((2, 2))(x)
+    x = keras.layers.Conv2D(128, (3, 3), activation='relu')(x)
+    x = keras.layers.MaxPooling2D((2, 2))(x)
+    
+    # Làm phẳng output từ CNN
+    x = keras.layers.Flatten()(x)
+    
+    # Dense layer sau CNN
+    x = keras.layers.Dense(64, activation='relu')(x)
+    x = keras.layers.Dropout(0.2)(x)
+    
+    # Lặp lại đặc trưng cho các bước thời gian (RepeatVector)
+    x = keras.layers.RepeatVector(days_result)(x)  # days_result là số ngày bạn muốn dự đoán
+    
+    # LSTM với Attention
+    lstm_out = keras.layers.LSTM(lstm_units, return_sequences=True)(x)
+    lstm_out = keras.layers.Dropout(0.3)(lstm_out) # (batch_sizes, time_steps=days_result, features=lstm_units)
+    
+    # Áp dụng Attention: (batch_sizes, time_steps=days_result, features=lstm_units)
+    attention_mul = attention_3d_block(lstm_out)
+    
+    # Lớp đầu ra
+    output = keras.layers.TimeDistributed(keras.layers.Dense(2, activation='linear'))(attention_mul)
+    
+    # Xây dựng mô hình
+    model = keras.models.Model(inputs=[inputs], outputs=output)
+    
+    return model, "attention_cnn_2"
+
+
 def split_cnn(image_shape, days_result):
     inputs = keras.layers.Input(shape=image_shape)
         
     # Các lớp CNN để trích xuất đặc trưng từ ảnh
-    x = keras.layers.Conv2D(days_result, (3, 3), activation='sigmoid')(inputs)
+    x = keras.layers.Conv2D(days_result, (3, 3), activation='relu')(inputs)
     x = keras.layers.MaxPooling2D((3, 3))(x)
 
     a = keras.layers.Permute((3, 1, 2))(x)
@@ -312,4 +370,60 @@ def split_cnn(image_shape, days_result):
     # Xây dựng mô hình
     model = keras.models.Model(inputs=[inputs], outputs=output)
     return model, "split_cnn"
+
+
+def channels_to_time_step_attention(image_shape, days_result=3, lstm_units=64):
+
+    # Hàm Attention
+    def attention_3d_block(inputs):
+        # inputs.shape = (batch_sizes, time_steps=days_result, features=lstm_units)
+        time_steps = inputs.shape[1]
+        
+        a = keras.layers.Permute((2, 1))(inputs)  # (batch_sizes, features=lstm_units, time_steps=days_result)
+        
+        # Tính attention score: (batch_sizes, features=lstm_units, time_steps=days_result)
+        # Softmax áp dụng trên axis cuối
+        a = keras.layers.Dense(time_steps, activation='softmax')(a)  
+        
+        # Trả về attention score theo thứ tự: (batch_sizes, time_steps=days_result, features=lstm_units)
+        a_probs = keras.layers.Permute((2, 1))(a)  
+        
+        # Tính trọng số của inputs với attention score: (batch_sizes, time_steps=days_result, features=lstm_units)
+        output_attention_mul = keras.layers.Multiply()([inputs, a_probs])  
+        
+        return output_attention_mul
+
+    # Mô hình CNN-LSTM với Attention
+    inputs = keras.layers.Input(shape=image_shape)
+    
+    # Các lớp CNN để trích xuất đặc trưng từ ảnh    
+    def cnn_layers(inputs):
+        inputs = keras.layers.Conv2D(days_result, (3, 3), activation='relu')(inputs)
+        # inputs = keras.layers.MaxPooling2D((2, 2))(inputs)
+        return inputs
+    
+    x = cnn_layers(inputs)
+    x = keras.layers.Permute((3, 1, 2))(x)
+    
+    # Làm phẳng output từ CNN
+    x = keras.layers.TimeDistributed(keras.layers.Flatten())(x)
+    x = keras.layers.TimeDistributed(keras.layers.Dense(64, activation='relu'))(x)
+    x = keras.layers.TimeDistributed(keras.layers.Dropout(0.1))(x)
+    x = keras.layers.TimeDistributed(keras.layers.Dense(64, activation='relu'))(x)
+    x = keras.layers.TimeDistributed(keras.layers.Dropout(0.1))(x)
+    
+    # LSTM với Attention
+    lstm_out = keras.layers.LSTM(lstm_units, activation="tanh", return_sequences=True)(x)
+    lstm_out = keras.layers.Dropout(0.1)(lstm_out) # (batch_sizes, time_steps=days_result, features=lstm_units)
+    
+    # Áp dụng Attention: (batch_sizes, time_steps=days_result, features=lstm_units)
+    attention_mul = attention_3d_block(lstm_out)
+    
+    # Lớp đầu ra
+    output = keras.layers.TimeDistributed(keras.layers.Dense(2, activation='relu'))(attention_mul)
+    
+    # Xây dựng mô hình
+    model = keras.models.Model(inputs=[inputs], outputs=output)
+    
+    return model, "channels_to_time_step_attention"
 
