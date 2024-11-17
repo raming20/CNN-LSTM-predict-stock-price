@@ -292,4 +292,24 @@ def attention_cnn(image_shape, lstm_units=64, days_result=3):
     return attention_model(image_shape, lstm_units, days_result)
 
 
+def split_cnn(image_shape, days_result):
+    inputs = keras.layers.Input(shape=image_shape)
+        
+    # Các lớp CNN để trích xuất đặc trưng từ ảnh
+    x = keras.layers.Conv2D(days_result, (3, 3), activation='sigmoid')(inputs)
+    x = keras.layers.MaxPooling2D((3, 3))(x)
+
+    a = keras.layers.Permute((3, 1, 2))(x)
+    
+    flatten = keras.layers.TimeDistributed(keras.layers.Flatten())(a)
+    flatten = keras.layers.TimeDistributed(keras.layers.Dense(32))(flatten)
+    flatten = keras.layers.TimeDistributed(keras.layers.Dense(32))(flatten)
+    lstm_1 = keras.layers.LSTM(64, return_sequences=True)(flatten)
+    lstm_1 = keras.layers.TimeDistributed(keras.layers.Dense(2))(lstm_1)
+     # Chỉ lấy 3 bước thời gian đầu tiên
+    output = keras.layers.Lambda(lambda x: x[:, :days_result, :])(lstm_1)  # Lấy 3 bước đầu
+    
+    # Xây dựng mô hình
+    model = keras.models.Model(inputs=[inputs], outputs=output)
+    return model, "split_cnn"
 
