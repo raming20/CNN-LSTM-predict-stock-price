@@ -113,6 +113,28 @@ def model_5(image_shape, days_result):
     return model, "model_5"
 
 
+def model_5_biLSTM(image_shape, days_result):
+    model = keras.Sequential([
+        keras.layers.Input(image_shape),
+        keras.layers.Conv2D(8, (2, 2), activation='relu'),
+        keras.layers.MaxPooling2D((2, 2), strides=(2, 2)),
+        keras.layers.Conv2D(8, (3, 3), activation='relu'),
+        keras.layers.MaxPooling2D((2, 2)),
+        keras.layers.Flatten(),
+        keras.layers.Dense(32, activation='relu'),
+        keras.layers.Dropout(0.1),  # Giảm tỷ lệ Dropout
+        keras.layers.Dense(32, activation='relu'),
+        keras.layers.Dropout(0.1),
+        keras.layers.RepeatVector(days_result),
+        keras.layers.LSTM(64, activation='tanh', return_sequences=True),
+        keras.layers.Dropout(0.1),
+        keras.layers.LSTM(64, activation='tanh', return_sequences=True),
+        keras.layers.TimeDistributed(keras.layers.Dense(2))
+    ])
+    
+    return model, "model_5_biLSTM"
+
+
 def model_6(image_shape, days_result):
     model = keras.Sequential([
         keras.layers.Input(image_shape),
