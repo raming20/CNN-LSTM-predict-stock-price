@@ -113,6 +113,62 @@ def model_5(image_shape, days_result):
     return model, "model_5"
 
 
+def model_5_with_trend_type(image_shape, days_result):
+    trend_type_input = keras.layers.Input(shape=(1,), name="trend_type_input")
+    x1 = keras.layers.Dense(8, activation='relu')(trend_type_input)
+    
+    image_input = keras.layers.Input(shape=image_shape, name="image_input")
+    
+    x2 = keras.layers.Conv2D(8, (2, 2), activation='relu')(image_input)
+    x2 = keras.layers.MaxPooling2D((2, 2), strides=(2, 2))(x2)
+    x2 = keras.layers.Conv2D(8, (3, 3), activation='relu')(x2)
+    x2 = keras.layers.MaxPooling2D((2, 2))(x2)
+    x2 = keras.layers.Flatten()(x2)
+    x2 = keras.layers.Dense(32, activation='relu')(x2)
+    
+    combined = keras.layers.concatenate([x1, x2])
+    
+    z = keras.layers.Dense(32, activation='relu')(combined)
+    z = keras.layers.Dense(32, activation='relu')(z)
+    
+    input_lstm = keras.layers.RepeatVector(days_result)(z)
+    lstm = keras.layers.LSTM(64, activation='tanh', return_sequences=True)(input_lstm)
+    output_lstm = keras.layers.TimeDistributed(keras.layers.Dense(2))(lstm)
+    
+    model = keras.models.Model(inputs=[trend_type_input, image_input], outputs=output_lstm)
+    
+    return model, "model_5_with_trend_type"
+
+
+def model_5_with_trend_type_1(image_shape, days_result):
+    trend_type_input = keras.layers.Input(shape=(1,), name="trend_type_input")
+    x1 = keras.layers.Dense(32, activation='relu')(trend_type_input) # (batch_size, features)
+    x1 = keras.layers.Reshape((1, 32))(x1) # (batch_size, 1, features)
+    
+    image_input = keras.layers.Input(shape=image_shape, name="image_input")
+    
+    x2 = keras.layers.Conv2D(8, (2, 2), activation='relu')(image_input)
+    x2 = keras.layers.MaxPooling2D((2, 2), strides=(2, 2))(x2)
+    x2 = keras.layers.Conv2D(8, (3, 3), activation='relu')(x2)
+    x2 = keras.layers.MaxPooling2D((2, 2))(x2)
+    x2 = keras.layers.Flatten()(x2)
+    x2 = keras.layers.Dense(32, activation='relu')(x2)
+    
+    z = keras.layers.Dense(32, activation='relu')(x2)
+    z = keras.layers.Dropout(0.1)(z)
+    z = keras.layers.Dense(32, activation='relu')(z)
+    
+    input_lstm = keras.layers.RepeatVector(days_result-1)(z) # (batch_size, time_steps, height, width, channels)
+    input_lstm = keras.layers.concatenate([x1, input_lstm], axis=1)
+    lstm = keras.layers.LSTM(64, activation='tanh', return_sequences=True)(input_lstm)
+    lstm = keras.layers.Dropout(0.1)(lstm)
+    output_lstm = keras.layers.TimeDistributed(keras.layers.Dense(2))(lstm)
+    
+    model = keras.models.Model(inputs=[trend_type_input, image_input], outputs=output_lstm)
+    
+    return model, "model_5_with_trend_type_1"
+
+
 def model_5_biLSTM(image_shape, days_result):
     model = keras.Sequential([
         keras.layers.Input(image_shape),

@@ -97,6 +97,11 @@ def get_open_close_prices_percent_of_last_days_result(days_result, features, lab
     return get_open_close_prices_percent_of_last_days_result_for_one_day_result(days_result, features, labels, *args, **kwargs)
 
 
+def get_open_close_prices_percent_of_last_days_result_for_trend_type_dataset(days_result, trend_type_values, features, labels, *args, **kwargs):
+    features, percent_change_of_open_close = get_open_close_prices_percent_of_last_days_result(days_result, features, labels, *args, **kwargs)
+    return ((trend_type_values, features), percent_change_of_open_close)
+
+
 def get_open_close_log_diff_of_last_days_result_for_one_day_result(days_result, features, labels, *args, **kwargs):
     labels = swap_max_and_min_two_columns(labels, 1, 2)
     open_close_prices_of_last_candle_in_image = tf.gather(labels[:,-days_result-1:-days_result, :], [1, 2], axis=-1)
