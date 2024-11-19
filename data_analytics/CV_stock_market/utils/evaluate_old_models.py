@@ -1,6 +1,6 @@
 import keras
 from functools import partial
-from common_train_utils import get_open_close_prices_percent_of_last_days_result, load_dataset_of_each_type_and_combine
+from data_analytics.CV_stock_market.utils.common_train_utils import get_open_close_prices_percent_of_last_days_result, load_dataset_of_each_type_and_combine
 
 
 def evaluate_btc_model_5(candle_type_and_directory_save, batch_size, shuffle_buffer):
