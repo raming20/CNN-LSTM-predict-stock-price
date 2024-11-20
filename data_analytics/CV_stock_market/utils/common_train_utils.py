@@ -2,6 +2,11 @@ import json
 import tensorflow as tf
 import keras
 import numpy as np
+import os
+
+
+def get_absolute_path(path):
+    return os.path.abspath(path)
 
 
 def read_config(dataset_folder):
@@ -160,3 +165,20 @@ def up_or_down_in_close_for_one_days_result(days_result, features, labels, *args
 
 def get_image_shape(dataset):
     pass
+
+
+def unwrap_dataset_at_index(dataset, index, batch=False, to_numpy=False, map_function=lambda x: x):
+    def convert_function_numpy(x):
+        if to_numpy:
+            return x.numpy()
+        else:
+            return x
+    
+    datas = [map_function(convert_function_numpy(item[index])) for item in dataset]
+    if batch:
+        data_unwrap = datas[0]
+        for data_i in datas[1:]:
+            data_unwrap = np.concatenate([data_unwrap, data_i], axis=0)
+    else:
+        data_unwrap = np.array(datas)
+    return data_unwrap
