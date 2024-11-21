@@ -107,6 +107,24 @@ def get_open_close_prices_percent_of_last_days_result_for_trend_type_dataset(day
     return ((trend_type_values, features), percent_change_of_open_close)
 
 
+def get_open_close_prices_percent_of_last_days_result_for_ema_macd_trend_dataset(days_result, ema_9, macd_history, trend_type_values, features, labels, *args, **kwargs):
+    """
+        ema_9 (batch_size, total_days=6, 1)
+        macd_history (batch_size, total_days=6, 1)
+    """
+    ema_9 = ema_9[:, 0:-days_result, 0] # (batch_size, total_days=3)
+    diff_1_ema_9 = ema_9[:, 1:] - ema_9[:, :-1] # (batch_size, total_days=2)
+    arctan_diff_1_ema_9 = tf.atan(diff_1_ema_9) # (batch_size, total_days=2)
+    
+    macd_history = macd_history[:, 0:-days_result, 0] # (batch_size, total_days=6)
+    diff_1_macd_history = macd_history[:, 1:] - macd_history[:, :-1] # (batch_size, total_days=2)
+    arctan_diff_1_macd_history = tf.atan(diff_1_macd_history) # (batch_size, total_days=2)
+    
+    features, percent_change_of_open_close = get_open_close_prices_percent_of_last_days_result(days_result, features, labels, *args, **kwargs)
+    
+    return ((arctan_diff_1_ema_9, arctan_diff_1_macd_history, trend_type_values, features), percent_change_of_open_close)
+
+
 def get_open_close_log_diff_of_last_days_result_for_one_day_result(days_result, features, labels, *args, **kwargs):
     labels = swap_max_and_min_two_columns(labels, 1, 2)
     open_close_prices_of_last_candle_in_image = tf.gather(labels[:,-days_result-1:-days_result, :], [1, 2], axis=-1)
@@ -163,8 +181,13 @@ def up_or_down_in_close_for_one_days_result(days_result, features, labels, *args
     return features, one_hot_labels
 
 
-def get_image_shape(dataset):
-    pass
+def get_image_shape(dataset_train, index_of_image):
+    images_train = None
+    for item in dataset_train.take(1):
+        images_train = item[index_of_image]
+        break
+    image_shape = tuple(images_train.shape)
+    return image_shape
 
 
 def unwrap_dataset_at_index(dataset, index, batch=False, to_numpy=False, map_function=lambda x: x):
