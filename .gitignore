@@ -175,5 +175,11 @@ python3.9
 *.xlsx
 
 abc*
-*dataset*
+# data_analytics/CV_stock_market/dataset
 *picture*
+
+data_analytics/CV_stock_market/dataset/*.rar
+data_analytics/CV_stock_market/dataset/*/test
+data_analytics/CV_stock_market/dataset/*/train
+data_analytics/CV_stock_market/dataset/*/output_prediction_image
+data_analytics/CV_stock_market/dataset/*/model_save/*/*.keras
