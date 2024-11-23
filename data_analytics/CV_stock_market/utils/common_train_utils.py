@@ -20,16 +20,16 @@ def load_dataset_test(dataset_folder):
     return tf.data.Dataset.load(f'{dataset_folder}/test')
 
 
-def load_dataset_of_each_type_and_combine(dataset_folder, candle_type_and_directory_save: dict):    
+def load_dataset_of_each_type_and_combine(dataset_folder, candle_type_and_directory_save: dict, print_log=False):    
     list_dataset = []
     for folder_name in candle_type_and_directory_save.values():
         try:
             dataset = tf.data.Dataset.load(f'{dataset_folder}/{folder_name}')
-            print(f"folder: {folder_name}, \t\t total: {len(dataset)} images")
+            if print_log: print(f"folder: {folder_name}, \t\t total: {len(dataset)} images")
             list_dataset.append(dataset)
             
         except tf.errors.NotFoundError:
-            print(f"folder: {folder_name}, \t\t total: 0 images")
+            if print_log: print(f"folder: {folder_name}, \t\t total: 0 images")
             continue
     dataset_train = list_dataset[0]
     for dataset in list_dataset[1:]:
@@ -123,6 +123,26 @@ def get_open_close_prices_percent_of_last_days_result_for_ema_macd_trend_dataset
     features, percent_change_of_open_close = get_open_close_prices_percent_of_last_days_result(days_result, features, labels, *args, **kwargs)
     
     return ((arctan_diff_1_ema_9, arctan_diff_1_macd_history, trend_type_values, features), percent_change_of_open_close)
+
+
+def get_open_close_prices_percent_with_macd_sign(days_result, ema_9, macd_history, trend_type_values, features, labels, *args, **kwargs):
+    """
+        ema_9 (batch_size, total_days=6, 1)
+        macd_history (batch_size, total_days=6, 1)
+    """
+    ema_9 = ema_9[:, 0:-days_result, 0] # (batch_size, total_days=3)
+    diff_1_ema_9 = ema_9[:, 1:] - ema_9[:, :-1] # (batch_size, total_days=2)
+    arctan_diff_1_ema_9 = tf.atan(diff_1_ema_9) # (batch_size, total_days=2)
+    
+    macd_history = macd_history[:, 0:-days_result, 0] # (batch_size, total_days=6)
+    diff_1_macd_history = macd_history[:, 1:] - macd_history[:, :-1] # (batch_size, total_days=2)
+    arctan_diff_1_macd_history = tf.atan(diff_1_macd_history) # (batch_size, total_days=2)
+    
+    macd_sign = tf.math.sign(macd_history) # (batch_size, total_days=6)
+    
+    features, percent_change_of_open_close = get_open_close_prices_percent_of_last_days_result(days_result, features, labels, *args, **kwargs)
+    
+    return ((arctan_diff_1_ema_9, arctan_diff_1_macd_history, macd_sign, trend_type_values, features), percent_change_of_open_close)
 
 
 def get_open_close_log_diff_of_last_days_result_for_one_day_result(days_result, features, labels, *args, **kwargs):
