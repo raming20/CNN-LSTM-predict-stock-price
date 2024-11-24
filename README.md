@@ -29,16 +29,32 @@ The model combines:
 - Python 3.9+  
 - TensorFlow 2.12+  
 - Libraries:  
-  - `numpy`  
-  - `matplotlib`  
-  - `pandas`  
-  - `mplfinance`  
+	- `pandas==2.2.2`
+	- `hdfs==2.7.3`
+	- `numpy==1.26.4`
+	- `ta==0.11.0`
+	- `pyspark==3.5.1`
+	- `scikit-learn==1.5.1`
+	- `matplotlib==3.9.2`
+	- `yfinance==0.2.41`
+	- `scipy==1.13.1`
+	- `mplfinance==0.12.10b0`
+	- `opencv-python==4.10.0.84`
+	- `torch==2.4.1`
+	- `torchvision==0.19.1`
+	- `torchaudio==2.4.1`
+	- `tensorflow==2.17.0`
+	- `keras==3.6.0`
+	- `tensorflow-docs==2024.10.14.18741`
+	- `yahoo-finance==1.4.0`
+	- `openpyxl==3.1.5`
+	- `tabulate==0.9.0`
 
 ## Installation  
 1. Clone the repository:  
    ```bash  
-   git clone https://github.com/yourusername/stock-prediction-cnn-lstm.git  
-   cd stock-prediction-cnn-lstm  
+   git clone https://github.com/Hieucaohd/LSTM-predict-stock-by-technical-analysis.git  
+   cd LSTM-predict-stock-by-technical-analysis  
 
 2. Install required packages:  
    ```bash  
@@ -46,26 +62,30 @@ The model combines:
    ```  
 
 ## Usage  
-### 1. Prepare Data  
-- Place candlestick chart images in the `data/images` directory.  
-- Save EMA_9 and MACD slope data as a CSV file in the format:  
-  ```
-  date, ema_9_slope_day1, ema_9_slope_day2, ema_9_slope_day3, macd_slope_day1, macd_slope_day2, macd_slope_day3  
-  ```  
+### 1. Prepare Data
+- Run file: 
+	```
+	data_analytics/CV_stock_market/generate_data/generate_datase.ipynb
+	```
+- The output is a tensorflow dataset, placed in folder: 
+	```
+	data_analytics/CV_stock_market/dataset
+	```
+	The output contains candle images in numpy arrays format, 4 type of prices in 6 days.
 
 ### 2. Train the Model  
 Run the training script:  
 ```bash  
-python train.py  
+data_analytics/CV_stock_market/train_model/model_use_train_and_test.ipynb
 ```  
-Adjust hyperparameters in `config.py` for better performance.  
+Adjust hyperparameters in prompt for better performance.  
 
 ### 3. Predict Future Prices  
-Use the trained model to make predictions:  
+Use the trained model to make predictions, run the file:  
 ```bash  
-python predict.py --input data/sample_input.csv  
+data_analytics/CV_stock_market/test_model/test_model_use_train_and_test_with_ema_macd_trend.ipynb 
 ```  
-Output will be saved as a CSV file in the `results/` directory.  
+Output will be saved as a .png file in the `data_analytics/CV_stock_market/dataset/<dataset_name>/output_prediction_image` directory.  
 
 ## Results  
 ### Evaluation Metrics  
@@ -92,4 +112,4 @@ This project is licensed under the MIT License.
 
 ## Acknowledgements  
 - **TensorFlow** for providing the tools to implement CNN-LSTM.  
-- Financial data sourced from [Yahoo Finance](https://finance.yahoo.com).  
+- Financial data sourced from [Yahoo Finance](https://finance.yahoo.com) and [SSI](https://www.ssi.com.vn/).  
