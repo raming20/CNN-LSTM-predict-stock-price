@@ -1,115 +1,95 @@
-# Stock Price Prediction using LSTM
+# Stock Price Prediction Using CNN-LSTM  
+This project leverages a hybrid **CNN-LSTM** model to predict the percentage changes in opening and closing prices of stocks for the next 3 days. The model uses **TensorFlow** and takes candlestick chart images along with EMA_9 slope and MACD histogram slope as input.  
 
-## Overview
+## Project Overview  
+### Input:  
+- **Candlestick chart images**: Each image represents the candlestick pattern of the past 3 days.  
+- **EMA_9 slope**: The slope of the 9-day Exponential Moving Average (EMA) corresponding to each of the 3 days.  
+- **MACD histogram slope**: The slope of the MACD histogram for the same 3 days.  
 
-This project focuses on predicting stock prices using a Long Short-Term Memory (LSTM) neural network. The model is trained on technical analysis data, specifically the Moving Average Convergence Divergence (MACD) and the Relative Strength Index (RSI). By leveraging these technical indicators, the model aims to capture the patterns and trends in stock price movements to make accurate predictions.
+### Output:  
+- **Percentage change in opening price** for the next 3 days.  
+- **Percentage change in closing price** for the next 3 days.  
 
-## Table of Contents
+## Architecture  
+The model combines:  
+1. **CNN**: Extracts features from candlestick chart images, capturing visual patterns from the candlestick and price movement.  
+2. **LSTM**: Processes time-series data (EMA_9 and MACD slopes) to capture temporal dependencies.  
+3. **Fully Connected Layer**: Combines CNN and LSTM outputs to predict percentage changes in stock prices.  
 
-- [Introduction](#introduction)
-- [Dataset](#dataset)
-- [Feature Engineering](#feature-engineering)
-- [Model Architecture](#model-architecture)
-- [Training](#training)
-- [Evaluation](#evaluation)
-- [Results](#results)
-- [Usage](#usage)
-- [Future Work](#future-work)
-- [Contributing](#contributing)
-- [License](#license)
+## Loss Function and Metrics  
+- **Loss Function**: Mean Squared Error (MSE).  
+- **Evaluation Metric**: Mean Absolute Error (MAE).  
 
-## Introduction
+## Dataset  
+- **Candlestick Charts**: Generated using historical stock data, with each chart resized to `287x287x3`.  
+- **EMA_9 and MACD Histogram Slopes**: Calculated using standard formulas for technical indicators.  
 
-Stock price prediction is a challenging task due to the volatile nature of the financial markets. This project utilizes deep learning techniques, specifically LSTM networks, which are well-suited for time series forecasting. The model is trained on technical indicators MACD and RSI to predict future stock prices.
+## Prerequisites  
+- Python 3.9+  
+- TensorFlow 2.12+  
+- Libraries:  
+  - `numpy`  
+  - `matplotlib`  
+  - `pandas`  
+  - `mplfinance`  
 
-## Dataset
+## Installation  
+1. Clone the repository:  
+   ```bash  
+   git clone https://github.com/yourusername/stock-prediction-cnn-lstm.git  
+   cd stock-prediction-cnn-lstm  
 
-The dataset consists of historical stock price data, including:
+2. Install required packages:  
+   ```bash  
+   pip install -r requirements.txt  
+   ```  
 
-- Open price
-- Close price
-- High price
-- Low price
-- Volume
+## Usage  
+### 1. Prepare Data  
+- Place candlestick chart images in the `data/images` directory.  
+- Save EMA_9 and MACD slope data as a CSV file in the format:  
+  ```
+  date, ema_9_slope_day1, ema_9_slope_day2, ema_9_slope_day3, macd_slope_day1, macd_slope_day2, macd_slope_day3  
+  ```  
 
-The technical indicators, MACD and RSI, are calculated from the historical price data and used as features for training the LSTM model.
+### 2. Train the Model  
+Run the training script:  
+```bash  
+python train.py  
+```  
+Adjust hyperparameters in `config.py` for better performance.  
 
-## Feature Engineering
+### 3. Predict Future Prices  
+Use the trained model to make predictions:  
+```bash  
+python predict.py --input data/sample_input.csv  
+```  
+Output will be saved as a CSV file in the `results/` directory.  
 
-Before training the model, we preprocess the data and calculate the following features:
+## Results  
+### Evaluation Metrics  
+- **Loss**: Mean Squared Error (MSE).  
+- **Metric**: Mean Absolute Error (MAE).  
 
-- **MACD (Moving Average Convergence Divergence):** A trend-following momentum indicator that shows the relationship between two moving averages of a stock’s price.
-- **RSI (Relative Strength Index):** A momentum oscillator that measures the speed and change of price movements.
+### Sample Predictions  
+| Date       | Predicted Open (%) | Predicted Close (%) |  
+|------------|--------------------|---------------------|  
+| Day 1      | +2.3%              | -1.1%              |  
+| Day 2      | +0.8%              | +0.5%              |  
+| Day 3      | -0.6%              | +1.9%              |  
 
-These indicators are normalized using MinMaxScaler to ensure that they are within the same scale, which is crucial for the LSTM model.
+## Future Work  
+- Incorporate more technical indicators.  
+- Experiment with different CNN and LSTM architectures.  
+- Optimize for real-time inference.  
 
-## Model Architecture
+## Contributing  
+Contributions are welcome! Please submit a pull request or open an issue for discussion.  
 
-The LSTM model is designed to capture the temporal dependencies in the stock price data. The architecture includes:
+## License  
+This project is licensed under the MIT License.  
 
-- **Input Layer:** Accepts the MACD, RSI, and other relevant features.
-- **LSTM Layers:** Two stacked LSTM layers to learn the sequence patterns in the data.
-- **Dense Layer:** Fully connected layer to aggregate the learned features.
-- **Output Layer:** Predicts the future stock price.
-
-## Training
-
-The model is trained using the following configurations:
-
-- **Loss Function:** Mean Squared Error (MSE)
-- **Optimizer:** Adam optimizer with a learning rate of 0.001
-- **Batch Size:** 64
-- **Epochs:** 50
-
-The dataset is split into training and validation sets, with 80% of the data used for training and 20% for validation.
-
-## Evaluation
-
-The model is evaluated using Mean Absolute Error (MAE) and Root Mean Squared Error (RMSE). The evaluation metrics are calculated on both the training and validation sets to assess the model's performance.
-
-## Results
-
-The LSTM model shows promising results in predicting stock prices based on the MACD and RSI indicators. The evaluation metrics indicate that the model is able to capture the underlying trends and make accurate predictions.
-
-## Usage
-
-To run this project, follow these steps:
-
-1. **Clone the repository:**
-
-   ```bash
-   git clone https://github.com/Hieucaohd/LSTM-predict-stock-by-technical-analysis
-   cd LSTM-predict-stock-by-technical-analysis
-
-2. **Install the required packages:**
-
-	Required python 3.9 or lower.
-
-   ```bash
-	 pip -m venv venv
-	 .\venv\Scripts\activate
-	 pip install -r requirements.txt
-
-3. **Prepare the dataset:**
-
-   Download har file from this link.
-
-4. **Run the training script:**
-
-	 Just run the file crawl/ssi/ssi_stock_price.ipynb
-
-	
-## Future Work
-
-- Incorporate additional technical indicators to improve prediction accuracy.
-- Explore the use of more advanced deep learning architectures, such as GRU or Transformer models.
-- Implement real-time stock price prediction using a live data feed.
-
-
-## Contributing
-
-Contributions are welcome! Please fork this repository and submit a pull request for any enhancements, bug fixes, or new features.
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
+## Acknowledgements  
+- **TensorFlow** for providing the tools to implement CNN-LSTM.  
+- Financial data sourced from [Yahoo Finance](https://finance.yahoo.com).  
