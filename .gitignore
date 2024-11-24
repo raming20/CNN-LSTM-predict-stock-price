@@ -181,5 +181,7 @@ abc*
 data_analytics/CV_stock_market/dataset/*.rar
 data_analytics/CV_stock_market/dataset/*/test
 data_analytics/CV_stock_market/dataset/*/train
+data_analytics/CV_stock_market/dataset/*/continue_learning
+!data_analytics/CV_stock_market/dataset/*/continue_learning/*/config.json
 data_analytics/CV_stock_market/dataset/*/output_prediction_image
 data_analytics/CV_stock_market/dataset/*/model_save/*/*.keras
