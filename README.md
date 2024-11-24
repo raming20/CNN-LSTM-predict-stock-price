@@ -53,8 +53,8 @@ The model combines:
 ## Installation  
 1. Clone the repository:  
    ```bash  
-   git clone https://github.com/Hieucaohd/LSTM-predict-stock-by-technical-analysis.git  
-   cd LSTM-predict-stock-by-technical-analysis  
+   git clone https://github.com/Hieucaohd/CNN-LSTM-predict-stock-price.git  
+   cd CNN-LSTM-predict-stock-price
 
 2. Install required packages:  
    ```bash  
