@@ -54,18 +54,29 @@ def evaluate_fpt_model_5_biLSTM_with_trend_type_2023_2024(candle_type_and_direct
     return model, model.evaluate(dataset_test_3)
 
 
-def get_origin_transform_function(config_file_path):
+def get_config_file_in_model(config_file_path):
     with open(config_file_path, 'r') as file:
         config_and_loss = json.load(file)
-        model_function_name = config_and_loss["config"]["model_function"]
-        model_function = globals().get(model_function_name)
-        return model_function
+        return config_and_loss
 
 
-def evaluate_one_model(model_path, config_file_path, dataset_test, days_result):
+def get_origin_transform_function(config_file_path):
+    config_and_loss = get_config_file_in_model(config_file_path)
+    model_function_name = config_and_loss["config"]["model_function"]
+    model_function = globals().get(model_function_name)
+    return model_function
+    
+    
+def load_model_and_transform_function(model_path, config_file_path):
     model_loaded: keras.Sequential = keras.models.load_model(model_path)
     
     transform_function = get_origin_transform_function(config_file_path)
+    return model_loaded, transform_function
+
+
+def evaluate_one_model(model_path, config_file_path, dataset_test, days_result):
+    model_loaded, transform_function = load_model_and_transform_function(model_path, config_file_path)
+    
     dataset_test_transformed = dataset_test.map(
         partial(transform_function, days_result)
     )

@@ -1,0 +1,20 @@
+{
+  "config": {
+    "batch_size": 64,
+    "STEPS_PER_EPOCH": 6,
+    "name_sub_folder_save_metrics": "model_5_biLSTM_ema_macd_trend_cl_test_btc_dataset_0_2_3_2014_2024_test_2023_2024_with_ema_macd_trend",
+    "name_folder_save_metrics": "sizes/model_5_biLSTM_ema_macd_trend_cl_test_btc_dataset_0_2_3_2014_2024_test_2023_2024_with_ema_macd_trend",
+    "max_epochs": 100,
+    "val_loss_metric_mae_to_stop": -1.0,
+    "val_loss_metric_mse_to_stop": -1.0,
+    "start_learning_rate": 0.001,
+    "shuffle_buffer": 300,
+    "number_epochs_to_decrease_lr": 10,
+    "number_epochs_to_wait": 10,
+    "model_function": "get_open_close_prices_percent_of_last_days_result_for_ema_macd_trend_dataset"
+  },
+  "loss": {
+    "val_mse_loss": 4.105013847351074,
+    "val_mae_loss": 1.2553720474243164
+  }
+}
