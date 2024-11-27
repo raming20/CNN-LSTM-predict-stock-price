@@ -25,6 +25,7 @@ import tensorflow as tf
 import tensorflow_docs as tfdocs
 import tensorflow_docs.modeling
 import tensorflow_docs.plots
+import matplotlib.dates as mdates
 keras.config.enable_unsafe_deserialization()
 
 
@@ -53,14 +54,21 @@ def draw_prediction(
     draw_beside=False,
     save_image=None,
     print_image=True,
-    extend_real=False
+    extend_real=False,
+    date_generator=None,
+    symbol=None
     ):
     
-    title_input = f"Biểu đồ giá đầu vào ngày {date_i}"
-    title_real_candle = f"Biểu đồ giá cổ phiếu thực tế"
-    title_predict_candle = f"Biểu đồ giá cổ phiếu dự đoán cho {days_result} ngày cuối của đồ thị"
-    title_close = "Biểu đồ giá đóng cửa"
-    title_open = "Biểu đồ giá mở cửa"
+    all_dates = date_generator(date_i)
+    year = int(all_dates[0].year)
+    
+    symbol_and_year_str = f"mã {symbol}, năm {year}"
+    
+    title_input = f"""Biểu đồ giá đầu vào ngày {date_i}: \n{symbol_and_year_str}"""
+    title_real_candle = f"""Biểu đồ giá cổ phiếu thực tế: \n{symbol_and_year_str}"""
+    title_predict_candle = f"""Biểu đồ giá cổ phiếu dự đoán cho {days_result} ngày cuối của đồ thị: \n{symbol_and_year_str}"""
+    title_close = f"""Biểu đồ giá đóng cửa: \n{symbol_and_year_str}"""
+    title_open = f"""Biểu đồ giá mở cửa: \n{symbol_and_year_str}"""
     
     label_real_close='Giá đóng cửa thật'
     label_predict_close=f'Giá đóng cửa dự đoán cho {days_result} ngày cuối'
@@ -70,14 +78,17 @@ def draw_prediction(
     
     if show_x_orginal_candle and not draw_beside:
         plt.imshow(x_dataset_test_1_i)
+        if save_image is not None:
+            plt.savefig(save_image)
     
     df_real_data = pd.DataFrame(y_dataset_test_1_i, columns=["High", "Open", "Close", "Low"])
     
     mc = mpf.make_marketcolors(
     up='green', down='red', wick='inherit', edge='inherit', volume='inherit', )
     style = mpf.make_mpf_style(marketcolors=mc, figcolor="white")
-    
-    df_real_data['Date'] = pd.date_range(start='2023-01-01', periods=len(df_real_data), freq='D')
+
+    df_real_data["Date"] = all_dates
+    df_real_data["Date"] = pd.to_datetime(df_real_data["Date"])
     df_real_data.set_index('Date', inplace=True)
     
     if show_original_candle and not draw_beside:
@@ -93,6 +104,9 @@ def draw_prediction(
             panel_ratios=[6],
             title=title_real_candle,
         )
+        # plt.tight_layout()
+        if save_image is not None:
+            plt.savefig(save_image, bbox_inches='tight')
     
     df_predictions = df_real_data.copy()
     df_real_data_extend = df_real_data.copy()
@@ -168,6 +182,9 @@ def draw_prediction(
             panel_ratios=[6],
             title=title_predict_candle,
         )
+        # plt.tight_layout()
+        if save_image is not None:
+            plt.savefig(save_image, bbox_inches='tight')
     
     if show_close_compare and not draw_beside:
         fig = plt.figure(figsize=(10, 6))
@@ -178,7 +195,10 @@ def draw_prediction(
         plt.ylabel('Giá Đóng cửa')
         plt.legend()
         plt.grid(True)
+        # plt.tight_layout()
         plt.show()
+        if save_image is not None:
+            plt.savefig(save_image, bbox_inches='tight')
         
     if show_open_compare and not draw_beside:
         fig = plt.figure(figsize=(10, 6))
@@ -189,7 +209,10 @@ def draw_prediction(
         plt.ylabel('Giá Đóng cửa')
         plt.legend()
         plt.grid(True)
+        # plt.tight_layout()
         plt.show()
+        if save_image is not None:
+            plt.savefig(save_image, bbox_inches='tight')
         
     
     # Tạo Figure và hai Subplots cạnh nhau
@@ -206,7 +229,7 @@ def draw_prediction(
         ax4.set_title(title_open)
         
         if extend_real:
-            ax00.set_title(f"Biểu đồ khoảng giá cổ phiếu thực tế {days_result} ngày cuối của đồ thị")
+            ax00.set_title(f"""Biểu đồ khoảng giá cổ phiếu thực tế {days_result} ngày cuối của đồ thị?: \n{symbol_and_year_str}""")
             
             mpf.plot(
                 df_real_data_extend,
@@ -214,11 +237,6 @@ def draw_prediction(
                 style=style,
                 volume=False,  # Hiển thị khối lượng
                 axisoff=False,  # Bỏ trục x và y
-                returnfig=True,  # Trả về đối tượng Figure để tùy chỉnh
-                # figratio=(5, 5),  # Điều chỉnh tỷ lệ khung hình để thu hẹp khoảng cách
-                # figscale=1,  # Tăng kích thước biểu đồ để làm các nến gần nhau hơn
-                # panel_ratios=[6],
-                # title="Biểu đồ giá cổ phiếu thực tế",
                 ax=ax00
             )
             
@@ -229,11 +247,6 @@ def draw_prediction(
             style=style,
             volume=False,  # Hiển thị khối lượng
             axisoff=False,  # Bỏ trục x và y
-            returnfig=True,  # Trả về đối tượng Figure để tùy chỉnh
-            # figratio=(5, 5),  # Điều chỉnh tỷ lệ khung hình để thu hẹp khoảng cách
-            # figscale=1,  # Tăng kích thước biểu đồ để làm các nến gần nhau hơn
-            # panel_ratios=[6],
-            # title="Biểu đồ giá cổ phiếu thực tế",
             ax=ax1
         )
         mpf.plot(
@@ -242,33 +255,26 @@ def draw_prediction(
             style=style,
             volume=False,  # Hiển thị khối lượng
             axisoff=False,  # Bỏ trục x và y
-            returnfig=True,  # Trả về đối tượng Figure để tùy chỉnh
-            # figratio=(5, 5),  # Điều chỉnh tỷ lệ khung hình để thu hẹp khoảng cách
-            # figscale=1,  # Tăng kích thước biểu đồ để làm các nến gần nhau hơn
-            # panel_ratios=[6],
-            # title="Biểu đồ giá cổ phiếu dự đoán",
             ax=ax2
         )
         
-        ax3.plot(df_real_data.index, df_real_data["Close"], color='blue', marker='o', linestyle='-', label=label_real_close)
-        ax3.plot(df_real_data.index, df_predictions["Close"], color='orange', marker='x', linestyle='--', label=label_predict_close)
-        # ax3.title('Biểu đồ Giá Đóng cửa')
-        # ax3.xlabel('Ngày')
-        # ax3.ylabel('Giá Đóng cửa')
+        all_dates = df_real_data.index.strftime("%b %d")
+        ax3.plot(all_dates, df_real_data["Close"], color='blue', marker='o', linestyle='-', label=label_real_close)
+        ax3.plot(all_dates, df_predictions["Close"], color='orange', marker='x', linestyle='--', label=label_predict_close)
         ax3.legend()
         ax3.grid(True)
         
-        ax4.plot(df_real_data.index, df_real_data["Open"], color='blue', marker='o', linestyle='-', label=label_real_open)
-        ax4.plot(df_real_data.index, df_predictions["Open"], color='orange', marker='x', linestyle='--', label=label_predict_open)
-        # ax4.title('Biểu đồ Giá Đóng cửa')
-        # ax4.xlabel('Ngày')
-        # ax4.ylabel('Giá Đóng cửa')
+        ax4.plot(all_dates, df_real_data["Open"], color='blue', marker='o', linestyle='-', label=label_real_open)
+        ax4.plot(all_dates, df_predictions["Open"], color='orange', marker='x', linestyle='--', label=label_predict_open)
+
         ax4.legend()
         ax4.grid(True)
         
-        date_format = DateFormatter('%b-%d')
-        for ax in [ax1, ax2, ax3, ax4]:
-            ax.xaxis.set_major_formatter(date_format)
+        # date_format = DateFormatter('%d/%b')
+        # locator = mdates.DayLocator(interval=3) 
+        # for ax in [ax3, ax4]:
+        #     ax.xaxis.set_major_formatter(date_format)
+        #     ax.xaxis.set_major_locator(locator)
         
         plt.tight_layout()
         if save_image is not None:
