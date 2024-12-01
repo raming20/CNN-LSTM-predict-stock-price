@@ -1,0 +1,121 @@
+{
+    "month_test_in_year": {
+        "2002": [
+            0
+        ],
+        "2003": [
+            0
+        ],
+        "2004": [
+            0
+        ],
+        "2005": [
+            0
+        ],
+        "2006": [
+            0
+        ],
+        "2007": [
+            0
+        ],
+        "2008": [
+            0
+        ],
+        "2009": [
+            0
+        ],
+        "2010": [
+            0
+        ],
+        "2011": [
+            0
+        ],
+        "2012": [
+            0
+        ],
+        "2013": [
+            0
+        ],
+        "2014": [
+            0
+        ],
+        "2015": [
+            0
+        ],
+        "2016": [
+            0
+        ],
+        "2017": [
+            0
+        ],
+        "2018": [
+            0
+        ],
+        "2019": [
+            0
+        ],
+        "2020": [
+            0
+        ],
+        "2021": [
+            0
+        ],
+        "2022": [
+            0
+        ],
+        "2023": [
+            0
+        ],
+        "2024": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11
+        ]
+    },
+    "candle_type_and_directory_save": {
+        "Is_start_bullish_engulfing_candle": "bullish_engulfing",
+        "Is_start_bearish_engulfing_candle": "bearish_engulfing",
+        "Is_star_doji_candle": "star_doji",
+        "Is_dragonfly_doji_candle": "dragonfly_doji",
+        "Is_gravestone_doji_candle": "gravestone_doji",
+        "Is_start_morning_star_candle": "morning_star",
+        "Is_start_evening_star_candle": "evening_star",
+        "Is_hammer_candle": "hammer",
+        "Is_inverted_hammer_candle": "inverted_hammer",
+        "Is_start_harami_down_candle": "harami_down",
+        "Is_start_harami_up_candle": "harami_up",
+        "Is_start_tweezer_top_candle": "tweezer_top",
+        "Is_start_tweezer_bottom_candle": "tweezer_bottom",
+        "Is_marubozu_candle": "marubozu",
+        "Is_spin_candle": "spin",
+        "Is_start_next_3_day_up_candle": "next_3_day_up",
+        "Is_start_next_3_day_down_candle": "next_3_day_down"
+    },
+    "folder_save": "../dataset/apple_with_ema_macd_trend",
+    "figscale": 0.5,
+    "previous_days": 0,
+    "next_days": 2,
+    "days_result": 3,
+    "file_csv": "../data/apple/apple_to_now_1d.csv",
+    "indicator": {
+        "show_macd": false,
+        "show_macd_signal": false,
+        "show_macd_histogram": false,
+        "show_BB_avg": false,
+        "show_BB_high": false,
+        "show_BB_low": false,
+        "show_SMA": false,
+        "show_EMA_50": false,
+        "show_EMA_200": false
+    },
+    "total_records_train": 2194,
+    "total_records_test": 103
+}
