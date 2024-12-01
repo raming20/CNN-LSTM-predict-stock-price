@@ -243,12 +243,12 @@
         "Is_start_next_3_day_up_candle": "next_3_day_up",
         "Is_start_next_3_day_down_candle": "next_3_day_down"
     },
-    "folder_save": "../dataset/coca_cola_dataset_0_2_3_1980_2024_test_2017_2024_with_ema_macd_trend",
+    "folder_save": "../dataset/coca_cola_with_ema_macd_trend",
     "figscale": 0.5,
     "previous_days": 0,
     "next_days": 2,
     "days_result": 3,
-    "file_csv": "../data/coca_cola/coca_cola_1980_01_01_to_2024_11_19_1wk.csv",
+    "file_csv": "../data/coca_cola/coca_cola_to_now_1wk.csv",
     "indicator": {
         "show_macd": false,
         "show_macd_signal": false,

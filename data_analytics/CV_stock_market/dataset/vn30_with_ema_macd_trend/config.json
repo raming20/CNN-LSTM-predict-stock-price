@@ -81,7 +81,7 @@
         "Is_start_next_3_day_up_candle": "next_3_day_up",
         "Is_start_next_3_day_down_candle": "next_3_day_down"
     },
-    "folder_save": "../dataset/vn30_dataset_0_2_3_2012_2024_test_2023_2024_with_ema_macd_trend",
+    "folder_save": "../dataset/vn30_with_ema_macd_trend",
     "figscale": 0.5,
     "previous_days": 0,
     "next_days": 2,
