@@ -5,7 +5,7 @@ def model_5_biLSTM_with_ema_macd_trend(image_shape, days_result, days_of_ema_9=2
     image_input = keras.layers.Input(shape=image_shape, name="image_input")
     x2 = keras.layers.Conv2D(8, (2, 2), activation='relu')(image_input)
     x2 = keras.layers.MaxPooling2D((2, 2), strides=(2, 2))(x2)
-    x2 = keras.layers.Flatten()(image_input)
+    x2 = keras.layers.Flatten()(x2)
     x2 = keras.layers.Dense(64, activation='relu')(x2)
     x2 = keras.layers.Dropout(0.1)(x2)
     
@@ -30,4 +30,4 @@ def model_5_biLSTM_with_ema_macd_trend(image_shape, days_result, days_of_ema_9=2
     
     model = keras.models.Model(inputs=[ema_9_input, macd_history_input, trend_type_input, image_input], outputs=output_lstm)
     
-    return model, "model_5_bi2LSTM_ema_macd_trend"
+    return model, "model_5_biLSTM_ema_macd_trend"

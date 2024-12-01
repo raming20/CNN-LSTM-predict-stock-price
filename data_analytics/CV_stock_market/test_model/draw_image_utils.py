@@ -22,9 +22,6 @@ import ta.momentum
 import ta.trend
 import tempfile
 import tensorflow as tf
-import tensorflow_docs as tfdocs
-import tensorflow_docs.modeling
-import tensorflow_docs.plots
 import matplotlib.dates as mdates
 keras.config.enable_unsafe_deserialization()
 
@@ -56,25 +53,29 @@ def draw_prediction(
     print_image=True,
     extend_real=False,
     date_generator=None,
-    symbol=None
+    symbol=None,
+    print_all_days_for_prediction=True
     ):
     
-    all_dates = date_generator(date_i)
+    all_dates, total_date_reals = date_generator(date_i)
     year = int(all_dates[0].year)
     
     symbol_and_year_str = f"mã {symbol}, năm {year}"
     
+    days_predict_for = days_result
+    if not print_all_days_for_prediction:
+        days_predict_for = total_date_reals - (len(all_dates) - days_result)
+    
     title_input = f"""Biểu đồ giá đầu vào ngày {date_i}: \n{symbol_and_year_str}"""
     title_real_candle = f"""Biểu đồ giá cổ phiếu thực tế: \n{symbol_and_year_str}"""
-    title_predict_candle = f"""Biểu đồ giá cổ phiếu dự đoán cho {days_result} ngày cuối của đồ thị: \n{symbol_and_year_str}"""
+    title_predict_candle = f"""Biểu đồ giá cổ phiếu dự đoán cho {days_predict_for} ngày cuối của đồ thị: \n{symbol_and_year_str}"""
     title_close = f"""Biểu đồ giá đóng cửa: \n{symbol_and_year_str}"""
     title_open = f"""Biểu đồ giá mở cửa: \n{symbol_and_year_str}"""
     
     label_real_close='Giá đóng cửa thật'
-    label_predict_close=f'Giá đóng cửa dự đoán cho {days_result} ngày cuối'
+    label_predict_close=f'Giá đóng cửa dự đoán cho {days_predict_for} ngày cuối'
     label_real_open='Giá mở cửa thật'
-    label_predict_open=f'Giá mở cửa dự đoán cho {days_result} ngày cuối'
-    
+    label_predict_open=f'Giá mở cửa dự đoán cho {days_predict_for} ngày cuối'
     
     if show_x_orginal_candle and not draw_beside:
         plt.imshow(x_dataset_test_1_i)
@@ -91,9 +92,12 @@ def draw_prediction(
     df_real_data["Date"] = pd.to_datetime(df_real_data["Date"])
     df_real_data.set_index('Date', inplace=True)
     
+    close_prices_real = df_real_data["Close"][0:total_date_reals]
+    open_prices_real = df_real_data["Open"][0:total_date_reals]
+    
     if show_original_candle and not draw_beside:
         fig, axlist = mpf.plot(
-            df_real_data,
+            df_real_data[0:total_date_reals],
             type='candle',
             style=style,
             volume=False,  # Hiển thị khối lượng
@@ -110,7 +114,6 @@ def draw_prediction(
     
     df_predictions = df_real_data.copy()
     df_real_data_extend = df_real_data.copy()
-    
     
     if type_of_output == "close":
         last_close_in_x_original_candle = df_predictions.iloc[-days_result-1, 2]
@@ -169,6 +172,13 @@ def draw_prediction(
         last_close_in_x_original_candle = df_predictions.iloc[-days_result-1, 2]
         df_predictions.iloc[-days_result:] = (predictions_i.reshape(1,-1)[0]) * last_close_in_x_original_candle / 100 + last_close_in_x_original_candle
     
+    all_dates = df_real_data.index.strftime("%b %d")
+    all_dates_of_prediction = all_dates
+    if not print_all_days_for_prediction:
+        all_dates_of_prediction = all_dates[0:total_date_reals]
+        df_predictions = df_predictions[0:total_date_reals]
+        pass
+    
     if show_prediction_candle and not draw_beside:
         fig, axlist = mpf.plot(
             df_predictions,
@@ -185,11 +195,12 @@ def draw_prediction(
         # plt.tight_layout()
         if save_image is not None:
             plt.savefig(save_image, bbox_inches='tight')
+            
     
     if show_close_compare and not draw_beside:
         fig = plt.figure(figsize=(10, 6))
-        plt.plot(df_real_data.index, df_real_data["Close"], color='blue', marker='o', linestyle='-', label=label_real_close)
-        plt.plot(df_real_data.index, df_predictions["Close"], color='orange', marker='x', linestyle='--', label=label_predict_close)
+        plt.plot(all_dates[0:total_date_reals], close_prices_real, color='blue', marker='o', linestyle='-', label=label_real_close)
+        plt.plot(all_dates_of_prediction, df_predictions["Close"], color='orange', marker='x', linestyle='--', label=label_predict_close)
         plt.title(title_close)
         plt.xlabel('Ngày')
         plt.ylabel('Giá Đóng cửa')
@@ -202,8 +213,8 @@ def draw_prediction(
         
     if show_open_compare and not draw_beside:
         fig = plt.figure(figsize=(10, 6))
-        plt.plot(df_real_data.index, df_real_data["Open"], color='blue', marker='o', linestyle='-', label=label_real_open)
-        plt.plot(df_real_data.index, df_predictions["Open"], color='orange', marker='x', linestyle='--', label=label_predict_open)
+        plt.plot(all_dates[0:total_date_reals], open_prices_real, color='blue', marker='o', linestyle='-', label=label_real_open)
+        plt.plot(all_dates_of_prediction, df_predictions["Open"], color='orange', marker='x', linestyle='--', label=label_predict_open)
         plt.title(title_open)
         plt.xlabel('Ngày')
         plt.ylabel('Giá Đóng cửa')
@@ -229,10 +240,10 @@ def draw_prediction(
         ax4.set_title(title_open)
         
         if extend_real:
-            ax00.set_title(f"""Biểu đồ khoảng giá cổ phiếu thực tế {days_result} ngày cuối của đồ thị?: \n{symbol_and_year_str}""")
+            ax00.set_title(f"""Biểu đồ khoảng giá cổ phiếu thực tế {days_predict_for} ngày cuối của đồ thị: \n{symbol_and_year_str}""")
             
             mpf.plot(
-                df_real_data_extend,
+                df_real_data_extend[0:total_date_reals],
                 type='candle',
                 style=style,
                 volume=False,  # Hiển thị khối lượng
@@ -242,7 +253,7 @@ def draw_prediction(
             
         ax0.imshow(x_dataset_test_1_i)
         mpf.plot(
-            df_real_data,
+            df_real_data[0:total_date_reals],
             type='candle',
             style=style,
             volume=False,  # Hiển thị khối lượng
@@ -258,20 +269,20 @@ def draw_prediction(
             ax=ax2
         )
         
-        all_dates = df_real_data.index.strftime("%b %d")
-        ax3.plot(all_dates, df_real_data["Close"], color='blue', marker='o', linestyle='-', label=label_real_close)
-        ax3.plot(all_dates, df_predictions["Close"], color='orange', marker='x', linestyle='--', label=label_predict_close)
+        
+        ax3.plot(all_dates[0:total_date_reals], close_prices_real, color='blue', marker='o', linestyle='-', label=label_real_close)
+        ax3.plot(all_dates_of_prediction, df_predictions["Close"], color='orange', marker='x', linestyle='--', label=label_predict_close)
         ax3.legend()
         ax3.grid(True)
         
-        ax4.plot(all_dates, df_real_data["Open"], color='blue', marker='o', linestyle='-', label=label_real_open)
-        ax4.plot(all_dates, df_predictions["Open"], color='orange', marker='x', linestyle='--', label=label_predict_open)
+        ax4.plot(all_dates[0:total_date_reals], open_prices_real, color='blue', marker='o', linestyle='-', label=label_real_open)
+        ax4.plot(all_dates_of_prediction, df_predictions["Open"], color='orange', marker='x', linestyle='--', label=label_predict_open)
 
         ax4.legend()
         ax4.grid(True)
         
         # date_format = DateFormatter('%d/%b')
-        # locator = mdates.DayLocator(interval=3) 
+        # locator = mdates.DayLocator(interval=3)
         # for ax in [ax3, ax4]:
         #     ax.xaxis.set_major_formatter(date_format)
         #     ax.xaxis.set_major_locator(locator)
@@ -280,9 +291,9 @@ def draw_prediction(
         if save_image is not None:
             plt.savefig(save_image)
         
-        if print_image:
-            plt.show()
-        else:
-            plt.close(fig)
+    if print_image:
+        plt.show()
+    else:
+        plt.close(fig)
         
         
