@@ -1,23 +1,5 @@
 {
     "month_test_in_year": {
-        "2006": [
-            0
-        ],
-        "2007": [
-            0
-        ],
-        "2008": [
-            0
-        ],
-        "2009": [
-            0
-        ],
-        "2010": [
-            0
-        ],
-        "2011": [
-            0
-        ],
         "2012": [
             0
         ],
@@ -52,9 +34,29 @@
             0
         ],
         "2023": [
-            0
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12
         ],
         "2024": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
             10,
             11,
             12
@@ -84,7 +86,7 @@
     "previous_days": 0,
     "next_days": 2,
     "days_result": 3,
-    "file_csv": "../data/fpt/fpt_to_now_1d.csv",
+    "file_csv": "../data/fpt/fpt_2006_12_13_to_2024_11_15.csv",
     "indicator": {
         "show_macd": false,
         "show_macd_signal": false,
@@ -96,6 +98,6 @@
         "show_EMA_50": false,
         "show_EMA_200": false
     },
-    "total_records_train": 3222,
-    "total_records_test": 29
+    "total_records_train": 1424,
+    "total_records_test": 221
 }

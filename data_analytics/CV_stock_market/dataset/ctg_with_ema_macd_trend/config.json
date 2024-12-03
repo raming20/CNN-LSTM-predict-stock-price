@@ -43,29 +43,9 @@
             0
         ],
         "2023": [
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9,
-            10,
-            11,
-            12
+            0
         ],
         "2024": [
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9,
             10,
             11,
             12
@@ -95,7 +75,7 @@
     "previous_days": 0,
     "next_days": 2,
     "days_result": 3,
-    "file_csv": "../data/ctg/ctg_2009_07_16_to_2024_11_22.csv",
+    "file_csv": "../data/ctg/ctg_to_now_1d.csv",
     "indicator": {
         "show_macd": false,
         "show_macd_signal": false,
@@ -107,6 +87,6 @@
         "show_EMA_50": false,
         "show_EMA_200": false
     },
-    "total_records_train": 1888,
-    "total_records_test": 221
+    "total_records_train": 2597,
+    "total_records_test": 29
 }

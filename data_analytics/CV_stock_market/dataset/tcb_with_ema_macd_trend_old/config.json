@@ -1,17 +1,5 @@
 {
     "month_test_in_year": {
-        "2014": [
-            0
-        ],
-        "2015": [
-            0
-        ],
-        "2016": [
-            0
-        ],
-        "2017": [
-            0
-        ],
         "2018": [
             0
         ],
@@ -28,24 +16,9 @@
             0
         ],
         "2023": [
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9,
-            10,
-            11,
-            12
+            0
         ],
         "2024": [
-            1,
-            2,
-            3,
-            4,
             5,
             6,
             7,
@@ -75,12 +48,12 @@
         "Is_start_next_3_day_up_candle": "next_3_day_up",
         "Is_start_next_3_day_down_candle": "next_3_day_down"
     },
-    "folder_save": "../dataset/btc_dataset_0_2_3_2014_2024_test_2023_2024_with_ema_macd_trend",
+    "folder_save": "../dataset/tcb_with_ema_macd_trend",
     "figscale": 0.5,
     "previous_days": 0,
     "next_days": 2,
     "days_result": 3,
-    "file_csv": "../data/btc/btc_2014_09_17_to_2024_11_03.csv",
+    "file_csv": "../data/tcb/tcb_2018_06_04_to_2024_11_22.csv",
     "indicator": {
         "show_macd": false,
         "show_macd_signal": false,
@@ -92,6 +65,6 @@
         "show_EMA_50": false,
         "show_EMA_200": false
     },
-    "total_records_train": 1616,
-    "total_records_test": 364
+    "total_records_train": 638,
+    "total_records_test": 77
 }

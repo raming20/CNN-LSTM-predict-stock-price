@@ -19,11 +19,6 @@
             0
         ],
         "2024": [
-            5,
-            6,
-            7,
-            8,
-            9,
             10,
             11,
             12
@@ -53,7 +48,7 @@
     "previous_days": 0,
     "next_days": 2,
     "days_result": 3,
-    "file_csv": "../data/tcb/tcb_2018_06_04_to_2024_11_22.csv",
+    "file_csv": "../data/tcb/tcb_to_now_1d.csv",
     "indicator": {
         "show_macd": false,
         "show_macd_signal": false,
@@ -65,6 +60,6 @@
         "show_EMA_50": false,
         "show_EMA_200": false
     },
-    "total_records_train": 638,
-    "total_records_test": 77
+    "total_records_train": 896,
+    "total_records_test": 29
 }
