@@ -37,6 +37,15 @@
             0
         ],
         "2024": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
             10,
             11,
             12
@@ -78,6 +87,6 @@
         "show_EMA_50": false,
         "show_EMA_200": false
     },
-    "total_records_train": 4545,
-    "total_records_test": 0
+    "total_records_train": 4274,
+    "total_records_test": 300
 }

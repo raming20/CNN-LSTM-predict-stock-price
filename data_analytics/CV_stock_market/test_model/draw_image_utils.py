@@ -24,6 +24,11 @@ import tempfile
 import tensorflow as tf
 import matplotlib.dates as mdates
 keras.config.enable_unsafe_deserialization()
+from utils.draw_candle_image import draw_candle_image
+from skimage.metrics import structural_similarity as ssim
+from PIL import Image
+import imagehash
+
 
 
 def check_last_candle_is_up_or_down(df: pd.DataFrame, day_result):
@@ -34,6 +39,54 @@ def check_last_candle_is_up_or_down(df: pd.DataFrame, day_result):
         return "up"
     
     return "down"
+
+
+def calculate_prediction_df(
+    df_real_data: pd.DataFrame,
+    predictions_i: np.ndarray,
+    days_result: int,
+    extend_real: bool,
+    is_trading_24h=False,
+    ):
+    # ["High", "Open", "Close", "Low"]
+    # [0, 1, 2, 3]
+    
+    df_predictions = df_real_data.copy()
+    df_real_data_extend = df_real_data.copy()
+
+    for day in range(days_result, 0, -1):
+        is_real_up = check_last_candle_is_up_or_down(df_real_data, day) == "up"
+        open_close_real_before = df_predictions.iloc[-day-1, [1, 2]]
+        max_in_open_close_real_before = np.max(open_close_real_before)
+        min_in_open_close_real_before = np.min(open_close_real_before)
+        
+        if days_result == 1:
+            percent_predict = predictions_i
+        else:
+            percent_predict = predictions_i[-day]
+        
+        swaped = [max_in_open_close_real_before, min_in_open_close_real_before]
+        result = (percent_predict * swaped) / 100 + swaped
+        
+        max_in_result = np.max(result)
+        min_in_result = np.min(result)
+        
+        if is_real_up:
+            df_predictions.iloc[-day, [1, 2]] = [min_in_result, max_in_result]
+            if extend_real: df_real_data_extend.iloc[-day, [1, 2]] = df_real_data_extend.iloc[-day, [3, 0]]
+        else:
+            df_predictions.iloc[-day, [1, 2]] = [max_in_result, min_in_result]
+            if extend_real: df_real_data_extend.iloc[-day, [1, 2]] = df_real_data_extend.iloc[-day, [0, 3]]
+        df_predictions.iloc[-day, [0, 3]] = [max_in_result, min_in_result]
+    
+    if is_trading_24h:
+        for day in range(days_result, 0, -1):
+            is_real_up = check_last_candle_is_up_or_down(df_real_data, day) == "up"
+            close_price_before = df_predictions.iloc[-day-1, [2]]
+            df_predictions.iloc[-day, [1]] = close_price_before
+            
+    return df_predictions, df_real_data_extend
+    
 
 
 def draw_prediction(
@@ -52,25 +105,31 @@ def draw_prediction(
     save_image=None,
     print_image=True,
     extend_real=False,
-    date_generator=None,
-    symbol=None,
-    print_all_days_for_prediction=True
+    date_generator=lambda x: x,
+    symbol="None",
+    print_all_days_for_prediction=True,
+    days_prediction_to_print=None,
+    is_trading_24h=False
     ):
+    
     
     all_dates, total_date_reals = date_generator(date_i)
     year = int(all_dates[0].year)
-    
-    symbol_and_year_str = f"mã {symbol}, năm {year}"
     
     days_predict_for = days_result
     if not print_all_days_for_prediction:
         days_predict_for = total_date_reals - (len(all_dates) - days_result)
     
-    title_input = f"""Biểu đồ giá đầu vào ngày {date_i}: \n{symbol_and_year_str}"""
-    title_real_candle = f"""Biểu đồ giá cổ phiếu thực tế: \n{symbol_and_year_str}"""
-    title_predict_candle = f"""Biểu đồ giá cổ phiếu dự đoán cho {days_predict_for} ngày cuối của đồ thị: \n{symbol_and_year_str}"""
-    title_close = f"""Biểu đồ giá đóng cửa: \n{symbol_and_year_str}"""
-    title_open = f"""Biểu đồ giá mở cửa: \n{symbol_and_year_str}"""
+    if days_prediction_to_print is not None:
+        days_predict_for = days_prediction_to_print
+        total_date_reals = (len(all_dates) - days_result) + days_prediction_to_print
+    
+    symbol_and_year_str_title = f"mã {symbol}, năm {year}"
+    title_input = f"""Biểu đồ giá đầu vào ngày {date_i}: \n{symbol_and_year_str_title}"""
+    title_real_candle = f"""Biểu đồ giá cổ phiếu thực tế: \n{symbol_and_year_str_title}"""
+    title_predict_candle = f"""Biểu đồ giá cổ phiếu dự đoán cho {days_predict_for} ngày cuối của đồ thị: \n{symbol_and_year_str_title}"""
+    title_close = f"""Biểu đồ giá đóng cửa: \n{symbol_and_year_str_title}"""
+    title_open = f"""Biểu đồ giá mở cửa: \n{symbol_and_year_str_title}"""
     
     label_real_close='Giá đóng cửa thật'
     label_predict_close=f'Giá đóng cửa dự đoán cho {days_predict_for} ngày cuối'
@@ -84,16 +143,24 @@ def draw_prediction(
     
     df_real_data = pd.DataFrame(y_dataset_test_1_i, columns=["High", "Open", "Close", "Low"])
     
-    mc = mpf.make_marketcolors(
-    up='green', down='red', wick='inherit', edge='inherit', volume='inherit', )
-    style = mpf.make_mpf_style(marketcolors=mc, figcolor="white")
-
     df_real_data["Date"] = all_dates
     df_real_data["Date"] = pd.to_datetime(df_real_data["Date"])
     df_real_data.set_index('Date', inplace=True)
     
+    df_predictions, df_real_data_extend = calculate_prediction_df(
+        df_real_data=df_real_data,
+        predictions_i=predictions_i,
+        days_result=days_result,
+        extend_real=extend_real,
+        is_trading_24h=is_trading_24h,
+    )
+    
     close_prices_real = df_real_data["Close"][0:total_date_reals]
     open_prices_real = df_real_data["Open"][0:total_date_reals]
+    
+    mc = mpf.make_marketcolors(
+    up='green', down='red', wick='inherit', edge='inherit', volume='inherit', )
+    style = mpf.make_mpf_style(marketcolors=mc, figcolor="white")
     
     if show_original_candle and not draw_beside:
         fig, axlist = mpf.plot(
@@ -112,72 +179,11 @@ def draw_prediction(
         if save_image is not None:
             plt.savefig(save_image, bbox_inches='tight')
     
-    df_predictions = df_real_data.copy()
-    df_real_data_extend = df_real_data.copy()
-    
-    if type_of_output == "close":
-        last_close_in_x_original_candle = df_predictions.iloc[-days_result-1, 2]
-        df_predictions.iloc[-days_result:, 2] = (predictions_i.reshape(1,-1)[0]) * last_close_in_x_original_candle / 100 + last_close_in_x_original_candle
-    elif type_of_output == "high_and_low":
-        last_high_and_low_in_original_candle = y_dataset_test_1_i[-days_result-1, [0, 3]]
-        df_predictions.iloc[-days_result:, [0, 3]] = (predictions_i.reshape(1,-1)[0]) * last_high_and_low_in_original_candle / 100 + last_high_and_low_in_original_candle
-    elif type_of_output == "open_and_close":
-        for day_result in range(days_result, 0, -1):
-            is_real_up = check_last_candle_is_up_or_down(df_real_data, day_result) == "up"
-            open_close_real_before = df_predictions.iloc[-day_result-1, [1, 2]]
-            max_in_open_close_real_before = np.max(open_close_real_before)
-            min_in_open_close_real_before = np.min(open_close_real_before)
-            
-            if days_result == 1:
-                percent_predict = predictions_i
-            else:
-                percent_predict = predictions_i[-day_result]
-            
-            swaped = [max_in_open_close_real_before, min_in_open_close_real_before]
-            result = (percent_predict * swaped) / 100 + swaped
-            
-            max_in_result = np.max(result)
-            min_in_result = np.min(result)
-            
-            if is_real_up:
-                df_predictions.iloc[-day_result, [1, 2]] = [min_in_result, max_in_result]
-                if extend_real: df_real_data_extend.iloc[-day_result, [1, 2]] = df_real_data_extend.iloc[-day_result, [3, 0]]
-            else:
-                df_predictions.iloc[-day_result, [1, 2]] = [max_in_result, min_in_result]
-                if extend_real: df_real_data_extend.iloc[-day_result, [1, 2]] = df_real_data_extend.iloc[-day_result, [0, 3]]
-            df_predictions.iloc[-day_result, [0, 3]] = [max_in_result, min_in_result]
-    elif type_of_output == "max_in_open_and_close":
-        for day_result in range(days_result, 0, -1):
-            is_real_up = check_last_candle_is_up_or_down(df_real_data, day_result) == "up"
-            open_close_real_before = df_predictions.iloc[-day_result-1, [1, 2]]
-            max_in_open_close_real_before = np.max(open_close_real_before)
-            min_in_open_close_real_before = np.min(open_close_real_before)
-            
-            if days_result == 1:
-                percent_predict = predictions_i
-            else:
-                percent_predict = predictions_i[-day_result]
-            
-            swaped = [max_in_open_close_real_before]
-            result = (percent_predict * swaped) / 100 + swaped
-            
-            max_in_result = np.max(result)
-            
-            if is_real_up:
-                df_predictions.iloc[-day_result:, [2]] = [max_in_result]
-            else:
-                df_predictions.iloc[-day_result:, [1]] = [max_in_result]
-
-    else:
-        last_close_in_x_original_candle = df_predictions.iloc[-days_result-1, 2]
-        df_predictions.iloc[-days_result:] = (predictions_i.reshape(1,-1)[0]) * last_close_in_x_original_candle / 100 + last_close_in_x_original_candle
-    
     all_dates = df_real_data.index.strftime("%b %d")
     all_dates_of_prediction = all_dates
     if not print_all_days_for_prediction:
         all_dates_of_prediction = all_dates[0:total_date_reals]
         df_predictions = df_predictions[0:total_date_reals]
-        pass
     
     if show_prediction_candle and not draw_beside:
         fig, axlist = mpf.plot(
@@ -192,7 +198,6 @@ def draw_prediction(
             panel_ratios=[6],
             title=title_predict_candle,
         )
-        # plt.tight_layout()
         if save_image is not None:
             plt.savefig(save_image, bbox_inches='tight')
             
@@ -206,7 +211,6 @@ def draw_prediction(
         plt.ylabel('Giá Đóng cửa')
         plt.legend()
         plt.grid(True)
-        # plt.tight_layout()
         plt.show()
         if save_image is not None:
             plt.savefig(save_image, bbox_inches='tight')
@@ -220,7 +224,6 @@ def draw_prediction(
         plt.ylabel('Giá Đóng cửa')
         plt.legend()
         plt.grid(True)
-        # plt.tight_layout()
         plt.show()
         if save_image is not None:
             plt.savefig(save_image, bbox_inches='tight')
@@ -240,7 +243,7 @@ def draw_prediction(
         ax4.set_title(title_open)
         
         if extend_real:
-            ax00.set_title(f"""Biểu đồ khoảng giá cổ phiếu thực tế {days_predict_for} ngày cuối của đồ thị: \n{symbol_and_year_str}""")
+            ax00.set_title(f"""Biểu đồ khoảng giá cổ phiếu thực tế {days_predict_for} ngày cuối của đồ thị: \n{symbol_and_year_str_title}""")
             
             mpf.plot(
                 df_real_data_extend[0:total_date_reals],
@@ -269,7 +272,6 @@ def draw_prediction(
             ax=ax2
         )
         
-        
         ax3.plot(all_dates[0:total_date_reals], close_prices_real, color='blue', marker='o', linestyle='-', label=label_real_close)
         ax3.plot(all_dates_of_prediction, df_predictions["Close"], color='orange', marker='x', linestyle='--', label=label_predict_close)
         ax3.legend()
@@ -281,12 +283,6 @@ def draw_prediction(
         ax4.legend()
         ax4.grid(True)
         
-        # date_format = DateFormatter('%d/%b')
-        # locator = mdates.DayLocator(interval=3)
-        # for ax in [ax3, ax4]:
-        #     ax.xaxis.set_major_formatter(date_format)
-        #     ax.xaxis.set_major_locator(locator)
-        
         plt.tight_layout()
         if save_image is not None:
             plt.savefig(save_image)
@@ -295,5 +291,107 @@ def draw_prediction(
         plt.show()
     else:
         plt.close(fig)
+
+
+def calculate_SSIM_between_two_image_tensor(image_tensor_1: np.ndarray, image_tensor_2: np.ndarray):
+    image1 = np.dot(image_tensor_1[..., :3], [0.2989, 0.5870, 0.1140])  # Chuyển sang grayscale
+    image2 = np.dot(image_tensor_2[..., :3], [0.2989, 0.5870, 0.1140])
+    
+    score, diff = ssim(image1, image2, full=True, data_range=image1.max() - image1.min())
+    
+    return score, diff
+
+
+def calculate_phash_similarity(image_array1, image_array2):
+    # Chuyển đổi numpy array sang định dạng PIL.Image
+    image1 = Image.fromarray((image_array1 * 255).astype(np.uint8)) if image_array1.dtype == float else Image.fromarray(image_array1)
+    image2 = Image.fromarray((image_array2 * 255).astype(np.uint8)) if image_array2.dtype == float else Image.fromarray(image_array2)
+
+    # Tính toán pHash cho hai ảnh
+    hash1 = imagehash.phash(image1)
+    hash2 = imagehash.phash(image2)
+
+    # Tính khoảng cách Hamming giữa hai hash
+    hamming_distance = hash1 - hash2
+
+    # Tính độ tương đồng
+    similarity = 1 - hamming_distance / len(hash1.hash) ** 2
+
+    return similarity, hamming_distance
+
+
+def calculate_similarity_prediction_and_real(
+    y_dataset_test_1_i, 
+    predictions_i, 
+    date_i,
+    days_result=3,
+    date_generator=lambda x: (x, 6),
+    function_calculate_similarity=calculate_SSIM_between_two_image_tensor
+    ):
+    
+    all_dates, total_date_reals = date_generator(date_i)
+    year = int(all_dates[0].year)
+    
+    days_predict_for = total_date_reals - (len(all_dates) - days_result)
+    
+    df_real_data = pd.DataFrame(y_dataset_test_1_i, columns=["High", "Open", "Close", "Low"])
+    
+    df_real_data["Date"] = all_dates
+    df_real_data["Date"] = pd.to_datetime(df_real_data["Date"])
+
+    
+    df_predictions, df_real_data_extend = calculate_prediction_df(
+        df_real_data=df_real_data,
+        predictions_i=predictions_i,
+        days_result=days_result,
+        extend_real=True
+    )
+    
+    image_tensor_real = draw_candle_image(
+        df_real_data[0:total_date_reals], 
+        show_x_y=False, 
+        show_volume=False, 
         
+        figscale=0.5, 
+        figcolor="black", 
+        preview_image=False,
+        return_image_tensor=True
+    )
+    
+    image_tensor_extend_real = draw_candle_image(
+        df_real_data_extend[0:total_date_reals], 
+        show_x_y=False, 
+        show_volume=False, 
+        
+        figscale=0.5, 
+        figcolor="black", 
+        preview_image=False,
+        return_image_tensor=True
+    )
+    
+    image_tensor_prediction = draw_candle_image(
+        df_predictions[0:total_date_reals], 
+        show_x_y=False, 
+        show_volume=False, 
+        
+        figscale=0.5, 
+        figcolor="black", 
+        preview_image=False,
+        return_image_tensor=True
+    )
+    
+    
+    score_real, diff_real = function_calculate_similarity(image_tensor_real, image_tensor_prediction)
+    score_extend_real, diff_extend_real = function_calculate_similarity(image_tensor_extend_real, image_tensor_prediction)
+    
+    return {
+        "date": date_i,
+        "days_predict_for": days_predict_for,
+        "score_real": score_real,
+        "score_extend_real": score_extend_real,
+        "diff_real": diff_real,
+        "diff_extend_real": diff_extend_real,
+    }
+
+
         
