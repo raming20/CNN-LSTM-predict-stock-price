@@ -187,3 +187,10 @@ data_analytics/CV_stock_market/dataset/*/output_prediction_image
 data_analytics/CV_stock_market/dataset/*/model_save/*/*.keras
 
 data_analytics/CV_stock_market/generate_data/get_data_from_api/apikey.txt
+
+data_analytics/try_attention/attention
+data_analytics/try_attention/dynamic_translator
+data_analytics/try_attention/translator
+data_analytics/try_attention/weights
+
+venv_test
