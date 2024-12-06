@@ -58,9 +58,19 @@ def draw_candle_image(
         show_BB_high=False,
         show_BB_low=False,
         
+        color_BB_avg="red",
+        color_BB_high="orange",
+        color_BB_low="orange",
+        
         show_SMA=False,
+        show_EMA_9=False,
         show_EMA_50=False,
         show_EMA_200=False,
+        
+        color_SMA="Aqua",
+        color_EMA_9="navy",
+        color_EMA_50="maroon",
+        color_EMA_200="navy",
         
         show_x_y=False,
         show_volume=False,
@@ -119,7 +129,7 @@ def draw_candle_image(
                                          panel=panel_order_of_macd, color="gray", alpha=0.5)
             )
     
-    if True in [show_BB_avg, show_BB_high, show_BB_low, show_SMA, show_EMA_50, show_EMA_200]:
+    if True in [show_BB_avg, show_BB_high, show_BB_low, show_SMA, show_EMA_9, show_EMA_50, show_EMA_200]:
         if show_BB_avg:
             adps.append(
                 mpf.make_addplot(df_draw['BB_avg'], color='red')
@@ -138,6 +148,11 @@ def draw_candle_image(
         if show_SMA:
             adps.append(
                 mpf.make_addplot(df_draw['SMA'], color='Aqua')
+            )
+        
+        if show_EMA_9:
+            adps.append(
+                mpf.make_addplot(df_draw['EMA_9'], color='navy')
             )
         
         if show_EMA_50:
