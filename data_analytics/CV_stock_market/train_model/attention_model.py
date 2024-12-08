@@ -16,39 +16,55 @@ class Encoder(keras.layers.Layer):
                                 recurrent_initializer='glorot_uniform', return_state=True)) # (batch_size, sequence_length=number_prices, units)
 
     def call(self, x):
+        """
+            x: (batch_size, sequence_length, n_dims_x)
+            
+            (batch_size, sequence_length, self.units)
+        """
+        x, final_state_fwd1, final_state_bwd1 = self.rnn(x) 
 
-        x, final_state_fwd1, final_state_bwd1 = self.rnn(x) # (batch_size, sequence_length=number_prices, units)
+        self.final_state_fwd1 = final_state_fwd1 # (batch_size, self.units)
+        self.final_state_bwd1 = final_state_bwd1 # (batch_size, self.units)
 
-        self.final_state_fwd1 = final_state_fwd1
-        self.final_state_bwd1 = final_state_bwd1
-
-        return x
+        return x # (batch_size, sequence_length=number_prices, self.units)
 
 
 class CrossAttention(keras.layers.Layer):
-    def __init__(self, units, **kwargs):
+    def __init__(self, units, num_heads=1, **kwargs):
         super().__init__()
-        self.mha = keras.layers.MultiHeadAttention(key_dim=units, num_heads=1, **kwargs)
+        self.mha = keras.layers.MultiHeadAttention(key_dim=int(units / num_heads), num_heads=num_heads, **kwargs)
         self.layernorm = keras.layers.LayerNormalization()
         self.add = keras.layers.Add()
 
-    def call(self, x, context):
+    def call(self, context, decoder_input):
+        """
+            context: (batch_size, sequence_length_context, n_dims)
+            decoder_input: (batch_size, sequence_length_decoder_input, n_dims)
+            
+            assert n_dims of context and decoder_input is same
+            
+            (batch_size, sequence_length_decoder_input, n_dims)
+        """
         
         attn_output, attn_scores = self.mha(
-            query=x,
+            query=decoder_input,
+            key=context,
             value=context,
-            return_attention_scores=True)
+            return_attention_scores=True
+        )
+        
+        # attn_output: (batch_size, sequence_length_decoder_input, n_dims)
+        # attn_scores: (batch_size, num_heads, sequence_length_decoder_input, sequence_length_context) -> giá trị softmax của từng key với query
 
-
-        attn_scores = tf.reduce_mean(attn_scores, axis=1)
-
-        self.last_attention_weights = attn_scores
         self.attn_output = attn_output
 
-        x = self.add([x, attn_output]) # (batch_size, number_prices, n_dims)
-        x = self.layernorm(x)
+        attn_scores = tf.reduce_mean(attn_scores, axis=1) # (batch_size, num_heads, sequence_length_decoder_input, sequence_length_context)
+        self.attn_scores = attn_scores
 
-        return x
+        decoder_output = self.add([decoder_input, attn_output]) # (batch_size, sequence_length_decoder_input, n_dims)
+        decoder_output = self.layernorm(decoder_output) # (batch_size, sequence_length_decoder_input, n_dims)
+
+        return decoder_output # (batch_size, sequence_length_decoder_input, n_dims)
 
 
 class Decoder(keras.layers.Layer):
@@ -61,8 +77,6 @@ class Decoder(keras.layers.Layer):
         super(Decoder, self).__init__()
 
         self.units = units
-        self.start_price = 0
-        self.end_price = 0
 
         # 2. The RNN keeps track of what's been generated so far.
         self.rnn = keras.layers.GRU(units,
@@ -76,28 +90,37 @@ class Decoder(keras.layers.Layer):
 
 
     def call(self,
-            context, x,
-            state=None,
-            return_state=False):
+            context, decoder_input,
+            state=None):
+        """
+            context: (batch_size, sequence_length_context, self.units)
+            decoder_input: (batch_size, sequence_length_decoder_input, n_dims)
+            
+            (
+                (batch_size, sequence_length_decoder_input, 2),
+                (batch_size, self.units)
+            )
+        """
 
-        x, state = self.rnn(x, initial_state=state) # (batch_size, number_prices, n_dims)
+        decoder_output_rnn, state = self.rnn(decoder_input, initial_state=state) 
+        
+        # decoder_output_rnn: (batch_size, sequence_length_decoder_input, self.units)
+        # state: (batch_size, self.units)
 
-        x = self.attention(x, context) # (batch_size, number_prices, n_dims)
-        self.last_attention_weights = self.attention.last_attention_weights
+        decoder_output = self.attention(context, decoder_output_rnn) # (batch_size, sequence_length_decoder_input, self.units)
 
-        logits = self.output_layer(x) # (batch_size, number_prices, vocab_size)
+        open_and_close = self.output_layer(decoder_output) # (batch_size, sequence_length_decoder_input, 2)
 
-        if return_state:
-            return logits, state
-        else:
-            return logits
+        return open_and_close, state
 
 
     def get_initial_state(self, context):
         batch_size = tf.shape(context)[0]
-        start_vector = tf.fill([batch_size, 1], self.start_price)
-        done = tf.zeros([batch_size, 1], dtype=tf.bool)
-        return start_vector, done, self.rnn.get_initial_state(start_vector)[0]
+        start_vector = tf.fill([batch_size, 1], self.start_price)  # (batch_size, 1)
+        done = tf.zeros([batch_size, 1], dtype=tf.bool) # (batch_size, 1)
+        
+        initial_state = self.rnn.get_initial_state(start_vector)[0] # (batch_size, self.units)
+        return start_vector, done, initial_state
 
 
     def get_next_price(self, context, next_price, done, state, temperature = 0.0):
@@ -124,28 +147,26 @@ class Translator(keras.Model):
         setattr(cls, fun.__name__, fun)
         return fun
 
-    def __init__(self, units,
-                context_text_processor,
-                target_text_processor):
+    def __init__(self, units):
         super().__init__()
         # Build the encoder and decoder
-        encoder = Encoder(context_text_processor, units)
-        decoder = Decoder(target_text_processor, units)
+        encoder = Encoder(units)
+        decoder = Decoder(units)
 
         self.encoder = encoder
         self.decoder = decoder
 
     def call(self, inputs):
-        context, x = inputs
+        context, decoder_input = inputs
         context = self.encoder(context)
-        logits = self.decoder(context, x)
+        logits = self.decoder(context, decoder_input)
 
-        #TODO(b/250038731): remove this
-        try:
-        # Delete the keras mask, so keras doesn't scale the loss+accuracy.
-            del logits._keras_mask 
-        except AttributeError:
-            pass
+        # #TODO(b/250038731): remove this
+        # try:
+        # # Delete the keras mask, so keras doesn't scale the loss+accuracy.
+        #     del logits._keras_mask 
+        # except AttributeError:
+        #     pass
 
         return logits
 
