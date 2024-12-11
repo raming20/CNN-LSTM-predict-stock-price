@@ -54,6 +54,10 @@ def draw_candle_image(
         show_macd_signal=False,
         show_macd_histogram=False,
         
+        color_macd="blue",
+        color_macd_signal="red",
+        color_macd_histogram="gray",
+        
         show_BB_avg=False,
         show_BB_high=False,
         show_BB_low=False,
@@ -77,7 +81,7 @@ def draw_candle_image(
         figscale=0.5,
         figcolor="white",
         figratio=(5, 5),
-        preview_image=True,
+        preview_image=False,
         return_image_tensor=False):
     """
     df is a pandas.DataFrame and assumed to have a columns: ['Date', 'Open', 'High', 'Low', 'Close', 'Volume'] 
@@ -116,53 +120,53 @@ def draw_candle_image(
         if show_macd:
             adps.append(
                 mpf.make_addplot(
-                    df_draw["Macd"], panel=panel_order_of_macd, color="blue", ylabel="MACD")
+                    df_draw["Macd"], panel=panel_order_of_macd, color=color_macd, ylabel="MACD")
             )
         if show_macd_signal:
             adps.append(
                 mpf.make_addplot(df_draw["Macd_signal"],
-                                         panel=panel_order_of_macd, color="red")
+                                         panel=panel_order_of_macd, color=color_macd_signal)
             )
         if show_macd_histogram:
             adps.append(
                 mpf.make_addplot(df_draw["Macd_histogram"], type="bar",
-                                         panel=panel_order_of_macd, color="gray", alpha=0.5)
+                                         panel=panel_order_of_macd, color=color_macd_histogram, alpha=0.5)
             )
     
     if True in [show_BB_avg, show_BB_high, show_BB_low, show_SMA, show_EMA_9, show_EMA_50, show_EMA_200]:
         if show_BB_avg:
             adps.append(
-                mpf.make_addplot(df_draw['BB_avg'], color='red')
+                mpf.make_addplot(df_draw['BB_avg'], color=color_BB_avg)
             )
         
         if show_BB_high:
             adps.append(
-                mpf.make_addplot(df_draw['BB_high'], color='orange')
+                mpf.make_addplot(df_draw['BB_high'], color=color_BB_high)
             )
         
         if show_BB_low:
             adps.append(
-                mpf.make_addplot(df_draw['BB_low'], color='orange')
+                mpf.make_addplot(df_draw['BB_low'], color=color_BB_low)
             )
         
         if show_SMA:
             adps.append(
-                mpf.make_addplot(df_draw['SMA'], color='Aqua')
+                mpf.make_addplot(df_draw['SMA'], color=color_SMA)
             )
         
         if show_EMA_9:
             adps.append(
-                mpf.make_addplot(df_draw['EMA_9'], color='navy')
+                mpf.make_addplot(df_draw['EMA_9'], color=color_EMA_9)
             )
         
         if show_EMA_50:
             adps.append(
-                mpf.make_addplot(df_draw['EMA_50'], color='maroon')
+                mpf.make_addplot(df_draw['EMA_50'], color=color_EMA_50)
             )
         
         if show_EMA_200:
             adps.append(
-                mpf.make_addplot(df_draw['EMA_200'], color='navy')
+                mpf.make_addplot(df_draw['EMA_200'], color=color_EMA_200)
             )
 
 
