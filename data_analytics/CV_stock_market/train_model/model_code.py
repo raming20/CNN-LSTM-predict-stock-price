@@ -737,3 +737,6 @@ def channels_to_time_step_attention_ema_macd_trend(image_shape, days_result, day
     model = keras.models.Model(inputs=[ema_9_input, macd_history_input, trend_type_input, image_input], outputs=output)
     
     return model, "channels_to_time_step_attention_ema_macd_trend"
+
+
+

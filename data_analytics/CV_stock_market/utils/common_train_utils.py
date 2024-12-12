@@ -61,7 +61,9 @@ def get_high_low_prices_percent_of_last_days_result(days_result, features, label
 
 
 def swap_max_and_min_two_columns(inputs, column_1, column_2):
+    # inputs: (batch_size, timestep, 4)
     # Chọn các giá trị ở index 1 và 2 của mỗi timestep trong feature
+    inputs = tf.cast(inputs, dtype=tf.float32)
     selected_features = tf.gather(inputs, [column_1, column_2], axis=-1)  # Shape: (batch_size, timestep, 2)
     
     # Tìm giá trị max và min ở cặp (1, 2)
@@ -77,29 +79,29 @@ def swap_max_and_min_two_columns(inputs, column_1, column_2):
     return outputs
 
 
-def get_open_close_prices_percent_of_last_days_result_for_one_day_result(days_result, features, labels, *args, **kwargs):
-    labels = swap_max_and_min_two_columns(labels, 1, 2)
-    open_close_prices_of_last_candle_in_image = tf.gather(labels[:,-days_result-1:-days_result, :], [1, 2], axis=-1)
-    open_close_prices_of_last_days_result = tf.gather(labels[:, -days_result:, :], [1, 2], axis=-1)
+def get_open_close_prices_percent_of_last_days_result_for_one_day_result(days_result, prices, *args, **kwargs):
+    prices = swap_max_and_min_two_columns(prices, 1, 2)
+    open_close_prices_of_last_candle_in_image = tf.gather(prices[:,-days_result-1:-days_result, :], [1, 2], axis=-1)
+    open_close_prices_of_last_days_result = tf.gather(prices[:, -days_result:, :], [1, 2], axis=-1)
     prices_percent = ((open_close_prices_of_last_days_result - open_close_prices_of_last_candle_in_image) / open_close_prices_of_last_candle_in_image) * 100
     prices_percent = prices_percent[:,-1]
-    return features, prices_percent
+    return prices_percent
 
 
-def get_open_close_prices_percent_of_last_days_result_for_multiple_days_result(days_result, features, labels, *args, **kwargs):
-    labels = swap_max_and_min_two_columns(labels, 1, 2)
+def get_open_close_prices_percent_of_last_days_result_for_multiple_days_result(days_result, prices, *args, **kwargs):
+    prices = swap_max_and_min_two_columns(prices, 1, 2)
     
-    difference = labels[:, 1:] - labels[:, :-1]
-    percent_change = (difference / labels[:, :-1]) * 100
+    difference = prices[:, 1:] - prices[:, :-1]
+    percent_change = (difference / prices[:, :-1]) * 100
     
     percent_change_of_open_close = tf.gather(percent_change[:, -days_result:, :], [1, 2], axis=-1 )
-    return features, percent_change_of_open_close
+    return percent_change_of_open_close
 
 
-def get_open_close_prices_percent_of_last_days_result(days_result, features, labels, *args, **kwargs):
+def get_open_close_prices_percent_of_last_days_result(days_result, labels, *args, **kwargs):
     if days_result > 1:
-        return get_open_close_prices_percent_of_last_days_result_for_multiple_days_result(days_result, features, labels, *args, **kwargs)
-    return get_open_close_prices_percent_of_last_days_result_for_one_day_result(days_result, features, labels, *args, **kwargs)
+        return get_open_close_prices_percent_of_last_days_result_for_multiple_days_result(days_result, labels, *args, **kwargs)
+    return get_open_close_prices_percent_of_last_days_result_for_one_day_result(days_result, labels, *args, **kwargs)
 
 
 def get_open_close_prices_percent_of_last_days_result_for_trend_type_dataset(days_result, trend_type_values, features, labels, *args, **kwargs):
@@ -107,22 +109,57 @@ def get_open_close_prices_percent_of_last_days_result_for_trend_type_dataset(day
     return ((trend_type_values, features), percent_change_of_open_close)
 
 
-def get_open_close_prices_percent_of_last_days_result_for_ema_macd_trend_dataset(days_result, ema_9, macd_history, trend_type_values, features, labels, *args, **kwargs):
+def get_open_close_prices_percent_of_last_days_result_for_ema_macd_trend_dataset(
+    days_result, 
+    list_ema_9, 
+    list_macd_histogram, 
+    list_trend_type_values, 
+    list_images_3_days, 
+    list_prices, 
+    *args, 
+    **kwargs):
     """
-        ema_9 (batch_size, total_days=6, 1)
-        macd_history (batch_size, total_days=6, 1)
+        list_ema_9 (batch_size, total_days=6, 1)
+        list_macd_histogram (batch_size, total_days=6, 1)
     """
-    ema_9 = ema_9[:, 0:-days_result, 0] # (batch_size, total_days=3)
-    diff_1_ema_9 = ema_9[:, 1:] - ema_9[:, :-1] # (batch_size, total_days=2)
+    list_ema_9 = list_ema_9[:, 0:-days_result, 0] # (batch_size, total_days=3)
+    diff_1_ema_9 = list_ema_9[:, 1:] - list_ema_9[:, :-1] # (batch_size, total_days=2)
     arctan_diff_1_ema_9 = tf.atan(diff_1_ema_9) # (batch_size, total_days=2)
     
-    macd_history = macd_history[:, 0:-days_result, 0] # (batch_size, total_days=6)
-    diff_1_macd_history = macd_history[:, 1:] - macd_history[:, :-1] # (batch_size, total_days=2)
+    list_macd_histogram = list_macd_histogram[:, 0:-days_result, 0] # (batch_size, total_days=6)
+    diff_1_macd_history = list_macd_histogram[:, 1:] - list_macd_histogram[:, :-1] # (batch_size, total_days=2)
     arctan_diff_1_macd_history = tf.atan(diff_1_macd_history) # (batch_size, total_days=2)
     
-    features, percent_change_of_open_close = get_open_close_prices_percent_of_last_days_result(days_result, features, labels, *args, **kwargs)
+    percent_change_of_open_close = get_open_close_prices_percent_of_last_days_result(days_result, list_prices, *args, **kwargs)
     
-    return ((arctan_diff_1_ema_9, arctan_diff_1_macd_history, trend_type_values, features), percent_change_of_open_close)
+    return ((arctan_diff_1_ema_9, arctan_diff_1_macd_history, list_trend_type_values, list_images_3_days), percent_change_of_open_close)
+
+
+def get_open_close_prices_percent_of_last_days_result_for_three_image_dataset(
+    days_result,
+    list_images_30_days,
+    list_images_7_days,
+    list_images_3_days,
+    list_ema_9,
+    list_macd_histogram,
+    list_dates,
+    list_prices,
+    *args, 
+    **kwargs
+    ):
+    """
+    """    
+    percent_change_of_open_close = get_open_close_prices_percent_of_last_days_result(days_result, list_prices, *args, **kwargs)
+    
+    return (
+        (
+            list_images_30_days,
+            list_images_7_days,
+            list_images_3_days,
+            percent_change_of_open_close,
+        ),
+        percent_change_of_open_close
+    )
 
 
 def get_open_close_prices_percent_with_macd_sign(days_result, ema_9, macd_history, trend_type_values, features, labels, *args, **kwargs):

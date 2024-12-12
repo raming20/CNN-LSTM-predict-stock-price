@@ -149,21 +149,17 @@ class Decoder(keras.layers.Layer):
         return next_price, done, state
 
 
-class AttentionModel(keras.Model):
+class Attention(keras.Layer):
 
     def __init__(self, units):
         super().__init__()
         # Build the encoder and decoder
         self.units = units
         
-        encoder = Encoder(units)
-        decoder = Decoder(units)
+        self.encoder = Encoder(units)
+        self.decoder = Decoder(units)
 
-        self.encoder = encoder
-        self.decoder = decoder
-
-    def call(self, inputs):
-        encoder_input, decoder_input = inputs
+    def call(self, encoder_input, decoder_input):
         
         # encoder_input: (batch_size, sequence_length_encoder_input, n_dims_encoder_input)
         # decoder_input: (batch_size, sequence_length_decoder_input, n_dims_decoder_input)
@@ -181,3 +177,48 @@ class AttentionModel(keras.Model):
 
         return open_and_close, decoder_last_state
 
+
+class ImageTimeSeries(keras.Model):
+    def __init__(self, units):
+        super().__init__()
+        # Build the encoder and decoder
+        self.units = units
+        
+        self.flatten_image_30_days = keras.layers.Flatten()
+        self.flatten_image_7_days = keras.layers.Flatten()
+        self.flatten_image_3_days = keras.layers.Flatten()
+        
+        self.attention = Attention(units)
+    
+    def call(self, inputs):
+        """
+            list_images_30_days: (batch_size, 287, 287, 3)
+            list_images_7_days: (batch_size, 287, 287, 3)
+            list_images_3_days: (batch_size, 287, 287, 3)
+            
+            percent_change_of_open_close: (batch_size, 3, 2)
+        """
+        
+        (
+            list_images_30_days,
+            list_images_7_days,
+            list_images_3_days,
+            percent_change_of_open_close,
+        ) = inputs
+        
+        list_images_30_days = self.flatten_image_30_days(list_images_30_days)
+        list_images_7_days = self.flatten_image_30_days(list_images_7_days)
+        list_images_3_days = self.flatten_image_30_days(list_images_3_days)
+        
+        encoder_input = tf.stack(
+            [
+                list_images_30_days, 
+                list_images_7_days, 
+                list_images_3_days
+            ],
+            axis=1
+        ) # (batch_size, 3, n_dims)
+        
+        open_and_close, decoder_last_state = self.attention(encoder_input, percent_change_of_open_close)
+        
+        return open_and_close

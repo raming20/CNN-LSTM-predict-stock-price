@@ -156,8 +156,8 @@ def save_to_tensorflow_dataset_with_ema_9_macd_histogram(
         list_images_3_days,
         list_images_7_days,
         list_images_30_days, 
-        list_dates, 
         list_prices, 
+        list_dates, 
         list_ema_9, 
         list_macd_histogram
     ) = function_generate(        
@@ -197,8 +197,8 @@ def save_to_tensorflow_dataset_with_ema_9_macd_histogram(
         list_images_3_days,
         list_ema_9,
         list_macd_histogram,
-        list_prices,
         list_dates,
+        list_prices,
     ))
     
     if save_dataset_to_folder is not None:
