@@ -2,10 +2,14 @@ import tensorflow as tf
 import keras
 
 
-class Encoder(keras.layers.Layer):
+class CNNEncoder(keras.layers.Layer):
     def __init__(self, units):
-        super(Encoder, self).__init__()
+        super(CNNEncoder, self).__init__()
         self.units = units
+        
+        self.flatten_image_30_days = keras.layers.Flatten()
+        self.flatten_image_7_days = keras.layers.Flatten()
+        self.flatten_image_3_days = keras.layers.Flatten()
 
         # The RNN layer processes those vectors sequentially.
         self.rnn = keras.layers.Bidirectional(
@@ -14,18 +18,37 @@ class Encoder(keras.layers.Layer):
                                 return_sequences=True,
                                 recurrent_initializer='glorot_uniform')) # (batch_size, sequence_length, units)
 
-    def call(self, x):
+    def call(
+            self, 
+            encoder_input_dict):
         """
-            x: (batch_size, sequence_length, n_dims_x)
+            encoder_input_dict: {
+                list_images_30_days: (batch_size, 287, 287, 3)
+                list_images_7_days: (batch_size, 287, 287, 3)
+                list_images_3_days: (batch_size, 287, 287, 3)
+            }
             
-            (batch_size, sequence_length, self.units), (batch_size, self.units)
+            (batch_size, sequence_length=3, self.units), (batch_size, self.units)
         """
-        x = tf.cast(x, dtype=tf.float32)
-        x = self.rnn(x) # (batch_size, sequence_length, self.units)
-        last_state = x[:, -1, :]
-        self.last_state = last_state # (batch_size, self.units)
+        
+        list_images_30_days = self.flatten_image_30_days(encoder_input_dict["list_images_30_days"]) # (batch_size, n_dims)
+        list_images_7_days = self.flatten_image_7_days(encoder_input_dict["list_images_7_days"]) # (batch_size, n_dims)
+        list_images_3_days = self.flatten_image_3_days(encoder_input_dict["list_images_3_days"]) # (batch_size, n_dims)
+        
+        input_rnn = tf.stack(
+            [
+                list_images_30_days, 
+                list_images_7_days, 
+                list_images_3_days
+            ],
+            axis=1
+        ) # (batch_size, sequence_length=3, n_dims)
+        
+        input_rnn = tf.cast(input_rnn, dtype=tf.float32)
+        output_rnn = self.rnn(input_rnn) # (batch_size, sequence_length=3, self.units)
+        self.last_state = output_rnn[:, -1, :] # (batch_size, self.units)
 
-        return x, last_state 
+        return output_rnn, self.last_state 
 
 
 class CrossAttention(keras.layers.Layer):
@@ -115,81 +138,40 @@ class Decoder(keras.layers.Layer):
         # decoder_output_rnn: (batch_size, sequence_length_decoder_input, self.units)
         # before_state: (batch_size, self.units)
 
-        decoder_output = self.attention(context, decoder_output_rnn) # (batch_size, sequence_length_decoder_input, self.units)
+        decoder_output = self.attention(
+            query_input=decoder_output_rnn, 
+            key_input=context) # (batch_size, sequence_length_decoder_input, self.units)
 
         open_and_close = self.output_layer(decoder_output) # (batch_size, sequence_length_decoder_input, 2)
 
         return open_and_close, before_state
 
 
-    def get_initial_state(self, context):
-        batch_size = tf.shape(context)[0]
-        start_vector = tf.fill([batch_size, 1], self.start_price)  # (batch_size, 1)
-        done = tf.zeros([batch_size, 1], dtype=tf.bool) # (batch_size, 1)
-        
-        initial_state = self.rnn.get_initial_state(start_vector)[0] # (batch_size, self.units)
-        return start_vector, done, initial_state
+    def get_initial_state(self, decoder_start_input, before_state):
+        open_and_close, before_state = self.rnn(decoder_start_input, initial_state=before_state) # (batch_size, self.units)
+        return before_state
 
 
-    def get_next_price(self, context, next_price, done, state, temperature = 0.0):
-        logits, state = self(
-            context, next_price,
-            state = state,
-            return_state=True)
+    def get_next_price(self, context, open_and_close_before, state):
+        open_and_close, new_state = self(
+            context = context, 
+            decoder_input = open_and_close_before,
+            state = state
+        )
 
-        if temperature == 0.0:
-            next_price = tf.argmax(logits, axis=-1)
-        else:
-            logits = logits[:, -1, :]/temperature
-            next_price = tf.random.categorical(logits, num_samples=1)
-
-        done = done | (next_price == self.end_price)
-        next_price = tf.where(done, tf.constant(0, dtype=tf.int64), next_price)
-
-        return next_price, done, state
+        return open_and_close, new_state
 
 
-class Attention(keras.Layer):
+class CNNAttention(keras.Model):
 
     def __init__(self, units):
         super().__init__()
         # Build the encoder and decoder
         self.units = units
         
-        self.encoder = Encoder(units)
+        self.encoder = CNNEncoder(units)
         self.decoder = Decoder(units)
 
-    def call(self, encoder_input, decoder_input):
-        
-        # encoder_input: (batch_size, sequence_length_encoder_input, n_dims_encoder_input)
-        # decoder_input: (batch_size, sequence_length_decoder_input, n_dims_decoder_input)
-        
-        context, encoder_last_state = self.encoder(encoder_input)
-        
-        # context: (batch_size, sequence_length_encoder_input, self.units)
-        # encoder_last_state: (batch_size, self.units)
-        
-        open_and_close, decoder_last_state = self.decoder(context, decoder_input, encoder_last_state)
-        
-        # open_and_close: (batch_size, sequence_length_decoder_input, 2)
-        # decoder_last_state: (batch_size, self.units)
-        
-
-        return open_and_close, decoder_last_state
-
-
-class ImageTimeSeries(keras.Model):
-    def __init__(self, units):
-        super().__init__()
-        # Build the encoder and decoder
-        self.units = units
-        
-        self.flatten_image_30_days = keras.layers.Flatten()
-        self.flatten_image_7_days = keras.layers.Flatten()
-        self.flatten_image_3_days = keras.layers.Flatten()
-        
-        self.attention = Attention(units)
-    
     def call(self, inputs):
         """
             list_images_30_days: (batch_size, 287, 287, 3)
@@ -206,19 +188,72 @@ class ImageTimeSeries(keras.Model):
             percent_change_of_open_close,
         ) = inputs
         
-        list_images_30_days = self.flatten_image_30_days(list_images_30_days)
-        list_images_7_days = self.flatten_image_30_days(list_images_7_days)
-        list_images_3_days = self.flatten_image_30_days(list_images_3_days)
+        encoder_input = {
+            "list_images_30_days": list_images_30_days,
+            "list_images_7_days": list_images_7_days,
+            "list_images_3_days": list_images_3_days,
+        }
+        context, encoder_last_state = self.encoder(encoder_input)
         
-        encoder_input = tf.stack(
-            [
-                list_images_30_days, 
-                list_images_7_days, 
-                list_images_3_days
-            ],
-            axis=1
-        ) # (batch_size, 3, n_dims)
+        # context: (batch_size, sequence_length_encoder_input, self.units)
+        # encoder_last_state: (batch_size, self.units)
         
-        open_and_close, decoder_last_state = self.attention(encoder_input, percent_change_of_open_close)
+        open_and_close, decoder_last_state = self.decoder(
+            context=context,
+            decoder_input=percent_change_of_open_close,
+            before_state=encoder_last_state,
+        )
         
+        # open_and_close: (batch_size, sequence_length_decoder_input, 2)
+        # decoder_last_state: (batch_size, self.units)
+
         return open_and_close
+    
+    def predict_next_3_days_prices(
+        self, 
+        list_images_30_days,
+            list_images_7_days,
+            list_images_3_days,
+            start_percent_change_of_open_close
+        ):
+        """
+            
+        """
+        
+        # list_images_30_days: (batch_size, 287, 287, 3)
+        # list_images_7_days: (batch_size, 287, 287, 3)
+        # list_images_3_days: (batch_size, 287, 287, 3)
+        # start_percent_change_of_open_close: (batch_size, 1, 2)
+        
+        
+        encoder_input = {
+            "list_images_30_days": list_images_30_days,
+            "list_images_7_days": list_images_7_days,
+            "list_images_3_days": list_images_3_days,
+        }
+        
+        context, encoder_last_state = self.encoder(encoder_input) 
+        # context: (batch_size, sequence_length=3, self.units)
+        # encoder_last_state: (batch_size, self.units)
+        
+        list_open_and_close = []
+        open_and_close = start_percent_change_of_open_close # (batch_size, 1, 2)
+        last_state = encoder_last_state # (batch_size, self.units)
+        for _ in range(3):
+            open_and_close, last_state = self.decoder(
+                context=context, 
+                decoder_input=open_and_close, 
+                before_state=last_state
+            )
+            # open_and_close: (batch_size, 1, 2)
+            # last_state: (batch_size, self.units)
+            
+            list_open_and_close.append(open_and_close)
+        
+        list_open_and_close = tf.concat(list_open_and_close, axis=1) # list_open_and_close: (batch_size, 3, 2)
+        
+        return list_open_and_close
+        
+
+
+    

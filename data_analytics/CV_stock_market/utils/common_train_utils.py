@@ -148,8 +148,9 @@ def get_open_close_prices_percent_of_last_days_result_for_three_image_dataset(
     **kwargs
     ):
     """
-    """    
-    percent_change_of_open_close = get_open_close_prices_percent_of_last_days_result(days_result, list_prices, *args, **kwargs)
+    """
+    # Sử dụng days_result + 1 là giá cuối cùng của đồ thị sẽ là giá bắt đầu của chuỗi trong decoder
+    percent_change_of_open_close = get_open_close_prices_percent_of_last_days_result(days_result + 1, list_prices, *args, **kwargs)
     
     return (
         (
