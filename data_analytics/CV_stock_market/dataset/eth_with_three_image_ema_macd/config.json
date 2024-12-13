@@ -1,0 +1,69 @@
+{
+    "month_test_in_year": {
+        "2017": [
+            0
+        ],
+        "2018": [
+            0
+        ],
+        "2019": [
+            0
+        ],
+        "2020": [
+            0
+        ],
+        "2021": [
+            0
+        ],
+        "2022": [
+            0
+        ],
+        "2023": [
+            0
+        ],
+        "2024": [
+            9,
+            10,
+            11,
+            12
+        ]
+    },
+    "candle_type_and_directory_save": {
+        "Is_start_bullish_engulfing_candle": "bullish_engulfing",
+        "Is_start_bearish_engulfing_candle": "bearish_engulfing",
+        "Is_star_doji_candle": "star_doji",
+        "Is_dragonfly_doji_candle": "dragonfly_doji",
+        "Is_gravestone_doji_candle": "gravestone_doji",
+        "Is_start_morning_star_candle": "morning_star",
+        "Is_start_evening_star_candle": "evening_star",
+        "Is_hammer_candle": "hammer",
+        "Is_inverted_hammer_candle": "inverted_hammer",
+        "Is_start_harami_down_candle": "harami_down",
+        "Is_start_harami_up_candle": "harami_up",
+        "Is_start_tweezer_top_candle": "tweezer_top",
+        "Is_start_tweezer_bottom_candle": "tweezer_bottom",
+        "Is_marubozu_candle": "marubozu",
+        "Is_spin_candle": "spin",
+        "Is_start_next_3_day_up_candle": "next_3_day_up",
+        "Is_start_next_3_day_down_candle": "next_3_day_down"
+    },
+    "folder_save": "../dataset/eth_with_three_image_ema_macd",
+    "figscale": 0.5,
+    "previous_days": 0,
+    "next_days": 2,
+    "days_result": 3,
+    "file_csv": "../data/eth/eth_to_now_1d.csv",
+    "indicator": {
+        "show_macd": false,
+        "show_macd_signal": false,
+        "show_macd_histogram": false,
+        "show_BB_avg": false,
+        "show_BB_high": false,
+        "show_BB_low": false,
+        "show_SMA": false,
+        "show_EMA_50": false,
+        "show_EMA_200": false
+    },
+    "total_records_train": 1768,
+    "total_records_test": 65
+}
