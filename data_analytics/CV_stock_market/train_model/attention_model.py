@@ -3,8 +3,8 @@ import keras
 
 
 class CNNEncoder(keras.layers.Layer):
-    def __init__(self, units):
-        super(CNNEncoder, self).__init__()
+    def __init__(self, units, *args, **kwargs):
+        super(CNNEncoder, self).__init__(*args, **kwargs)
         self.units = units
         
         self.flatten_image_30_days = keras.layers.Flatten()
@@ -52,8 +52,8 @@ class CNNEncoder(keras.layers.Layer):
 
 
 class CrossAttention(keras.layers.Layer):
-    def __init__(self, units, num_heads=1, **kwargs):
-        super().__init__()
+    def __init__(self, units, num_heads=1, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.units = units
         
         self.query = keras.layers.Dense(units)
@@ -100,8 +100,8 @@ class CrossAttention(keras.layers.Layer):
 
 class Decoder(keras.layers.Layer):
 
-    def __init__(self, units):
-        super(Decoder, self).__init__()
+    def __init__(self, units, *args, **kwargs):
+        super(Decoder, self).__init__(*args, **kwargs)
 
         self.units = units
 
@@ -164,8 +164,8 @@ class Decoder(keras.layers.Layer):
 
 class CNNAttention(keras.Model):
 
-    def __init__(self, units):
-        super().__init__()
+    def __init__(self, units, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         # Build the encoder and decoder
         self.units = units
         
@@ -253,6 +253,19 @@ class CNNAttention(keras.Model):
         list_open_and_close = tf.concat(list_open_and_close, axis=1) # list_open_and_close: (batch_size, 3, 2)
         
         return list_open_and_close
+    
+    def get_config(self):
+        # Include 'units' in the config
+        config = super(CNNAttention, self).get_config()
+        config.update({
+            'units': self.units,
+        })
+        return config
+
+    @classmethod
+    def from_config(cls, config):
+        # Ensure 'units' is included in the config
+        return cls(**config)
         
 
 
