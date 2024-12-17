@@ -195,3 +195,7 @@ data_analytics/try_attention/translator
 data_analytics/try_attention/weights
 
 venv_test
+*.zip
+venv*
+data_analytics/try_transformer/ted_hrlr_translate_pt_en_converter_extracted
+*.keras

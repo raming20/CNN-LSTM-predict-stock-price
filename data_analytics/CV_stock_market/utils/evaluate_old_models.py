@@ -4,6 +4,7 @@ from utils.common_train_utils import *
 import pandas as pd
 import numpy as np
 import tensorflow as tf
+import sys
 
 
 def evaluate_btc_model_5(candle_type_and_directory_save, batch_size, shuffle_buffer):
@@ -117,3 +118,80 @@ def evaluate_all_models_in_dataset_folder(all_models_folder_path, dataset_test, 
     
     df_result.sort_values("mse", inplace=True)
     return df_result
+
+
+class EvaluateTool:
+    def __init__(self):
+        pass
+    
+    def get_config_file_in_model(self, config_file_path):
+        with open(config_file_path, 'r') as file:
+            config_and_loss = json.load(file)
+            return config_and_loss
+
+
+    def get_origin_transform_function(self, config_file_path):
+        config_and_loss = self.get_config_file_in_model(config_file_path)
+        model_function_name = config_and_loss["config"]["model_function"]
+        model_function = globals().get(model_function_name)
+        return model_function
+        
+        
+    def load_model_and_transform_function(self, parent_model_path, model_path, config_file_path):
+        model_loaded: keras.Sequential = keras.models.load_model(model_path)
+        
+        transform_function = self.get_origin_transform_function(config_file_path)
+        return model_loaded, transform_function
+
+
+    def evaluate_one_model(self, parent_model_path, model_path, config_file_path, dataset_test, days_result):
+        model_loaded, transform_function = self.load_model_and_transform_function(parent_model_path, model_path, config_file_path)
+        
+        dataset_test_transformed = dataset_test.map(
+            partial(transform_function, days_result)
+        )
+        
+        loss = model_loaded.evaluate(dataset_test_transformed)
+        return loss
+
+    def do_before_load_model(self, parent_model_path):
+        pass
+    
+    def do_after_load_model(self, parent_model_path):
+        pass
+
+    def evaluate_all_models_in_dataset_folder(self, all_models_folder_path, dataset_test, days_result):
+        all_models_path_and_name = [
+            (
+                os.path.abspath(f.path),
+                os.path.join(
+                    os.path.abspath(f.path), f"{f.name}.keras"
+                ), 
+                f.name,
+                os.path.join(
+                    os.path.abspath(f.path), "config_and_loss.json"
+                )
+            ) 
+            for f in os.scandir(all_models_folder_path) 
+            if f.is_dir()
+        ]
+        
+        list_models_name = []
+        list_loss_mae = []
+        list_loss_mse = []
+        for parent_model_path, model_path, model_name, config_file_path in all_models_path_and_name:
+            self.do_before_load_model(parent_model_path)
+            loss = self.evaluate_one_model(parent_model_path, model_path, config_file_path, dataset_test, days_result)
+            list_models_name.append(model_name)
+            list_loss_mse.append(loss[0])
+            list_loss_mae.append(loss[1])
+            self.do_after_load_model(parent_model_path)
+        
+        df_result = pd.DataFrame({
+            "model_name": list_models_name,
+            "mse": list_loss_mse,
+            "mae": list_loss_mae
+        })
+        
+        df_result.sort_values("mse", inplace=True)
+        return df_result

@@ -1,22 +1,43 @@
 import tensorflow as tf
 import keras
 
-
+@tf.keras.utils.register_keras_serializable()
 class CNNEncoder(keras.layers.Layer):
     def __init__(self, units, *args, **kwargs):
         super(CNNEncoder, self).__init__(*args, **kwargs)
         self.units = units
         
-        self.flatten_image_30_days = keras.layers.Flatten()
-        self.flatten_image_7_days = keras.layers.Flatten()
-        self.flatten_image_3_days = keras.layers.Flatten()
-
-        # The RNN layer processes those vectors sequentially.
-        self.rnn = keras.layers.Bidirectional(
-            merge_mode="sum",
-            layer=keras.layers.GRU(units,
-                                return_sequences=True,
-                                recurrent_initializer='glorot_uniform')) # (batch_size, sequence_length, units)
+        self.convolutions = keras.layers.TimeDistributed(
+            keras.Sequential([
+                keras.layers.Conv2D(8, (2, 2), strides=1, activation='relu'),
+                # keras.layers.MaxPooling2D((2, 2), strides=(2, 2)),
+                # keras.layers.Conv2D(8, (2, 2), activation='relu'),
+                # keras.layers.MaxPooling2D((2, 2), strides=(2, 2)),
+            ])
+        )
+        
+        self.full_connected = keras.layers.TimeDistributed(
+            keras.Sequential([
+                keras.layers.Flatten(),
+                keras.layers.Dense(256),
+                keras.layers.Dropout(0.2),
+                keras.layers.Dense(256),
+                keras.layers.Dropout(0.2),
+                keras.layers.Dense(256),
+                keras.layers.Dropout(0.2),
+                keras.layers.Dense(256),
+                keras.layers.Dropout(0.2),
+                keras.layers.Dense(256),
+                keras.layers.Dropout(0.2),
+            ])
+        )
+        
+        self.rnn = keras.Sequential([
+            keras.layers.Bidirectional(merge_mode="sum", layer=keras.layers.GRU(units, return_sequences=True)),
+            keras.layers.Dropout(0.1),
+            keras.layers.Bidirectional(merge_mode="sum", layer=keras.layers.GRU(units, return_sequences=True)),
+            keras.layers.Dropout(0.1),
+        ])
 
     def call(
             self, 
@@ -31,26 +52,29 @@ class CNNEncoder(keras.layers.Layer):
             (batch_size, sequence_length=3, self.units), (batch_size, self.units)
         """
         
-        list_images_30_days = self.flatten_image_30_days(encoder_input_dict["list_images_30_days"]) # (batch_size, n_dims)
-        list_images_7_days = self.flatten_image_7_days(encoder_input_dict["list_images_7_days"]) # (batch_size, n_dims)
-        list_images_3_days = self.flatten_image_3_days(encoder_input_dict["list_images_3_days"]) # (batch_size, n_dims)
+        list_images_30_days = encoder_input_dict["list_images_30_days"]
+        list_images_7_days = encoder_input_dict["list_images_7_days"]
+        list_images_3_days = encoder_input_dict["list_images_3_days"]
         
         input_rnn = tf.stack(
             [
-                list_images_30_days, 
+                # list_images_30_days, 
                 list_images_7_days, 
                 list_images_3_days
             ],
             axis=1
-        ) # (batch_size, sequence_length=3, n_dims)
+        ) # (batch_size, sequence_length=3, 287, 287, 3)
         
+        input_rnn = self.convolutions(input_rnn)
+        input_rnn = self.full_connected(input_rnn)
+                
         input_rnn = tf.cast(input_rnn, dtype=tf.float32)
         output_rnn = self.rnn(input_rnn) # (batch_size, sequence_length=3, self.units)
         self.last_state = output_rnn[:, -1, :] # (batch_size, self.units)
 
         return output_rnn, self.last_state 
 
-
+@tf.keras.utils.register_keras_serializable()
 class CrossAttention(keras.layers.Layer):
     def __init__(self, units, num_heads=1, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -97,7 +121,7 @@ class CrossAttention(keras.layers.Layer):
 
         return decoder_output # (batch_size, sequence_length_key_input, n_dims)
 
-
+@tf.keras.utils.register_keras_serializable()
 class Decoder(keras.layers.Layer):
 
     def __init__(self, units, *args, **kwargs):
@@ -106,14 +130,18 @@ class Decoder(keras.layers.Layer):
         self.units = units
 
         # 2. The RNN keeps track of what's been generated so far.
-        self.rnn = keras.layers.GRU(units,
-                                    return_sequences=True,
-                                    recurrent_initializer='glorot_uniform')
+        
+        self.first_gru = keras.layers.GRU(self.units, return_sequences=True)
+        self.last_gru = keras.Sequential([
+            keras.layers.Dropout(0.1),
+            keras.layers.GRU(self.units, return_sequences=True),
+            keras.layers.Dropout(0.1),
+        ])
 
         self.attention = CrossAttention(units)
 
         self.output_layer = keras.layers.Dense(2)
-
+        
 
     def call(self,
             context, 
@@ -132,7 +160,8 @@ class Decoder(keras.layers.Layer):
 
         decoder_input = tf.cast(decoder_input, dtype=tf.float32)
         before_state = tf.cast(before_state, dtype=tf.float32)
-        decoder_output_rnn = self.rnn(decoder_input, initial_state=before_state)
+        decoder_output_rnn = self.first_gru(decoder_input, initial_state=before_state)
+        decoder_output_rnn = self.last_gru(decoder_output_rnn)
         before_state = decoder_output_rnn[:, -1, :]
         
         # decoder_output_rnn: (batch_size, sequence_length_decoder_input, self.units)
@@ -162,6 +191,7 @@ class Decoder(keras.layers.Layer):
         return open_and_close, new_state
 
 
+@tf.keras.utils.register_keras_serializable()
 class CNNAttention(keras.Model):
 
     def __init__(self, units, *args, **kwargs):

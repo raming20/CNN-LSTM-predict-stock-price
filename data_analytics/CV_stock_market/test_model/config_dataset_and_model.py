@@ -50,6 +50,13 @@ symbol_mapping = {
         "symbol_name": "BTC",
         "is_trading_24h": False,
     },
+    "BTC_A": {
+        "dataset_folder": "btc_with_three_image_ema_macd",
+        "model_name": "cnn_attention_epoch_29",
+        "freq_of_date": "D",
+        "symbol_name": "BTC",
+        "is_trading_24h": True,
+    },
     "COCA_COLA": {
         "dataset_folder": "coca_cola_with_ema_macd_trend",
         "model_name": "model_5_bi2LSTM_ema_macd_trend_1_1_1",

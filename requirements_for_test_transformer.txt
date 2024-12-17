@@ -17,10 +17,12 @@ opencv-python==4.10.0.84
 # torchvision==0.19.1
 # torchaudio==2.4.1
 
-tensorflow-text==2.10.0
+tensorflow-text==2.17.0
 
 # tensorflow
-tensorflow==2.10.0
+tensorflow==2.17.0
+tensorflow_datasets==4.9.3
+protobuf==3.20.3
 # keras==3.6.0
 # tensorflow-docs==2024.2.5.73858
 
